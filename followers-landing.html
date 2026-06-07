@@ -792,18 +792,41 @@
     payBtn.textContent = 'Inicjowanie płatności…';
     payBtn.disabled = true;
 
-    // Demo: w prawdziwej integracji tutaj wywołujesz swój backend
-    // który tworzy PaymentIntent i zwraca client_secret
-    // Przykład:
-    // const res = await fetch('/create-payment-intent', { method:'POST', body: JSON.stringify({amount, currency:'pln'}) });
-    // const { clientSecret } = await res.json();
-    // const result = await stripeInstance.confirmCardPayment(clientSecret, { payment_method: { card: cardElement } });
+    const username = document.getElementById('username-input').value.trim();
+    const pricePerK = prices[state.package];
+    const totalGrosze = Math.round((pricePerK * state.qty / 1000) * 100);
 
-    // Demo bez backendu – symulacja
-    await new Promise(r => setTimeout(r, 1200));
+    try {
+      const res = await fetch('https://followflow-production.up.railway.app/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: totalGrosze,
+          platform: state.platform,
+          package: state.package,
+          qty: state.qty,
+          username: username.replace('@',''),
+          method: state.method
+        })
+      });
 
-    document.getElementById('order-modal').classList.remove('open');
-    showSuccessModal();
+      const { clientSecret, error } = await res.json();
+      if (error) throw new Error(error);
+
+      const result = await stripeInstance.confirmPayment({
+        clientSecret,
+        confirmParams: {
+          return_url: 'https://followflow-production.up.railway.app/sukces'
+        }
+      });
+
+      if (result.error) {
+        alert('Błąd płatności: ' + result.error.message);
+      }
+    } catch (err) {
+      alert('Błąd połączenia z serwerem: ' + err.message);
+    }
+
     payBtn.textContent = 'Zapłać teraz';
     payBtn.disabled = false;
   }
