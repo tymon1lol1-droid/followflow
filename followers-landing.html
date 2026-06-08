@@ -626,7 +626,7 @@
         <svg viewBox="0 0 60 25" width="42" height="17" fill="none"><rect width="60" height="25" rx="5" fill="#635bff"/><text x="8" y="17" font-size="12" fill="white" font-family="Arial" font-weight="bold">stripe</text></svg>
         <span class="text-xs font-semibold primary-text">Bezpieczna płatność Stripe</span>
       </div>
-      <p class="text-xs muted-text">Aby aktywować Stripe, podaj swój <span class="text-violet-500 font-semibold">Publishable Key</span> w kodzie JS (zmienna <code class="bg-gray-100 px-1 rounded text-violet-600" style="background:var(--badge-bg)">STRIPE_PK</code>). Realizacja zamówienia do <strong class="primary-text">1 dnia roboczego</strong> od potwierdzenia płatności.</p>
+      <p class="text-xs muted-text">Płatność jest szyfrowana i bezpieczna. Realizacja zamówienia do <strong class="primary-text">1 dnia roboczego</strong> od potwierdzenia płatności.</p>
     </div>
 
     <button id="pay-btn" onclick="initiateStripePayment()"
@@ -644,8 +644,7 @@
   // STRIPE CONFIG – wstaw swój Publishable Key
   // ======================================
   const STRIPE_PK = 'pk_live_51R1XIeH8Z8w2dY6ZAWZMfUApKrXjVWhOkjXFCUsdu9UMYmaT0TOEwGthMlK37bYRbsvIgGFwBPsimvKgOKtfOTeX00gNb6nQdi';
-  let stripeInstance = null;
-  try { stripeInstance = Stripe(STRIPE_PK); } catch(e) { /* klucz testowy */ }
+  const stripeInstance = Stripe(STRIPE_PK);
 
   // ===== STATE =====
   let state = {
