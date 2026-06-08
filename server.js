@@ -9,10 +9,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const OWNER_EMAIL = 'FollowFlowSupport@proton.me';
 
 app.use(cors());
-app.use(express.static(__dirname));
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/followers-landing.html');
-}); // tutaj wrzucisz followers-landing.html
+app.use(express.static('public')); // tutaj wrzucisz followers-landing.html
 
 // Stripe wymaga raw body dla webhooków
 app.use('/webhook', express.raw({ type: 'application/json' }));
@@ -40,7 +37,64 @@ app.post('/create-payment-intent', async (req, res) => {
 });
 
 // =============================================
-// 2. Webhook – po udanej płatności wysyła maila
+// 2. Stripe Checkout Session
+// =============================================
+app.post('/create-checkout', async (req, res) => {
+  try {
+    const { amount, platform, package: pkg, qty, username, method } = req.body;
+    const platformNames = { ig: 'Instagram', tt: 'TikTok' };
+    const packageNames = { basic: 'Basic', premium: 'Premium', real: 'Real' };
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card', 'blik', 'p24'],
+      line_items: [{
+        price_data: {
+          currency: 'pln',
+          product_data: {
+            name: 'FollowFlow – ' + (platformNames[platform] || platform) + ' ' + (packageNames[pkg] || pkg),
+            description: parseInt(qty).toLocaleString('pl-PL') + ' obserwujących dla @' + username,
+          },
+          unit_amount: amount,
+        },
+        quantity: 1,
+      }],
+      mode: 'payment',
+      success_url: 'https://followflow-production.up.railway.app/sukces?session_id={CHECKOUT_SESSION_ID}',
+      cancel_url: 'https://followflow-production.up.railway.app/',
+      metadata: { platform, package: pkg, qty: String(qty), username, method }
+    });
+
+    res.json({ url: session.url });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// =============================================
+// 3. Strona sukcesu
+// =============================================
+app.get('/sukces', (req, res) => {
+  res.send(`<!DOCTYPE html>
+<html lang="pl">
+<head><meta charset="UTF-8"><title>Dziękujemy!</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>body{font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:linear-gradient(135deg,#fdf2f8,#ede9fe);}
+.box{text-align:center;background:#fff;padding:48px 40px;border-radius:24px;box-shadow:0 20px 60px rgba(124,58,237,0.15);max-width:420px;}
+h1{color:#7c3aed;font-size:2rem;margin-bottom:8px;}
+p{color:#6b7280;margin-bottom:24px;}
+a{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;padding:12px 28px;border-radius:12px;text-decoration:none;font-weight:bold;}
+</style></head>
+<body><div class="box">
+<div style="font-size:4rem;margin-bottom:16px">🎉</div>
+<h1>Dziękujemy!</h1>
+<p>Twoja płatność została przyjęta.<br>Obserwujący dotrą do <strong>1 dnia roboczego</strong>.</p>
+<a href="/">Wróć do strony</a>
+</div></body></html>`);
+});
+
+// =============================================
+// 4. Webhook – po udanej płatności wysyła maila
 // =============================================
 app.post('/webhook', async (req, res) => {
   const sig = req.headers['stripe-signature'];
