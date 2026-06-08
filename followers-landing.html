@@ -796,7 +796,7 @@
     const totalGrosze = Math.round((pricePerK * state.qty / 1000) * 100);
 
     try {
-      const res = await fetch('https://followflow-production.up.railway.app/create-payment-intent', {
+      const res = await fetch('https://followflow-production.up.railway.app/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -809,19 +809,10 @@
         })
       });
 
-      const { clientSecret, error } = await res.json();
+      const { url, error } = await res.json();
       if (error) throw new Error(error);
+      window.location.href = url;
 
-      const result = await stripeInstance.confirmPayment({
-        clientSecret,
-        confirmParams: {
-          return_url: 'https://followflow-production.up.railway.app/sukces'
-        }
-      });
-
-      if (result.error) {
-        alert('Błąd płatności: ' + result.error.message);
-      }
     } catch (err) {
       alert('Błąd połączenia z serwerem: ' + err.message);
     }
