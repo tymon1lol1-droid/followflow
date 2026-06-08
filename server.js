@@ -9,7 +9,11 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const OWNER_EMAIL = 'FollowFlowSupport@proton.me';
 
 app.use(cors());
-app.use(express.static('public')); // tutaj wrzucisz followers-landing.html
+app.use(express.static(__dirname));
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/followers-landing.html');
+});
+
 
 // Stripe wymaga raw body dla webhooków
 app.use('/webhook', express.raw({ type: 'application/json' }));
