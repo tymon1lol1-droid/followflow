@@ -9,11 +9,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const OWNER_EMAIL = 'FollowFlowSupport@proton.me';
 
 app.use(cors());
-app.use(express.static(__dirname));
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/followers-landing.html');
-});
-
+app.use(express.static('public')); // tutaj wrzucisz followers-landing.html
 
 // Stripe wymaga raw body dla webhooków
 app.use('/webhook', express.raw({ type: 'application/json' }));
@@ -111,10 +107,10 @@ app.post('/webhook', async (req, res) => {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  if (event.type === 'payment_intent.succeeded') {
-    const pi = event.data.object;
-    const { platform, package: pkg, qty, username, method } = pi.metadata;
-    const kwota = (pi.amount / 100).toFixed(2).replace('.', ',') + ' zł';
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    const { platform, package: pkg, qty, username, method } = session.metadata;
+    const kwota = (session.amount_total / 100).toFixed(2).replace('.', ',') + ' zł';
 
     const packageNames = { basic: 'Basic', premium: 'Premium', real: 'Real' };
     const platformNames = { ig: 'Instagram', tt: 'TikTok' };
@@ -153,7 +149,7 @@ app.post('/webhook', async (req, res) => {
             </tr>
           </table>
           <p style="color:#888;font-size:12px;margin-top:20px;text-align:center">
-            FollowFlow · Realizacja do 1 dnia roboczego · Payment ID: ${pi.id}
+            FollowFlow · Realizacja do 1 dnia roboczego · Payment ID: ${session.id}
           </p>
         </div>
       `
