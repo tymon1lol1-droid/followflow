@@ -119,8 +119,8 @@ app.post('/webhook', async (req, res) => {
     const platformNames = { ig: 'Instagram', tt: 'TikTok' };
 
     const emailResult = await resend.emails.send({
-      from: 'FollowFlow <onboarding@resend.dev>',
-      to: OWNER_EMAIL,
+      from: 'onboarding@resend.dev',
+      to: 'followflowsupport@proton.me',
       subject: `Nowe zamowienie FollowFlow - ${kwota}`,
       html: `
         <div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;background:#f9f9f9;padding:32px;border-radius:16px">
