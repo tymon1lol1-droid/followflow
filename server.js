@@ -118,10 +118,10 @@ app.post('/webhook', async (req, res) => {
     const packageNames = { basic: 'Basic', premium: 'Premium', real: 'Real' };
     const platformNames = { ig: 'Instagram', tt: 'TikTok' };
 
-    await resend.emails.send({
+    const emailResult = await resend.emails.send({
       from: 'FollowFlow <onboarding@resend.dev>',
       to: OWNER_EMAIL,
-      subject: `🛒 Nowe zamówienie FollowFlow – ${kwota}`,
+      subject: `Nowe zamowienie FollowFlow - ${kwota}`,
       html: `
         <div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;background:#f9f9f9;padding:32px;border-radius:16px">
           <h2 style="color:#7c3aed;margin-bottom:24px">🚀 Nowe zamówienie FollowFlow</h2>
@@ -158,7 +158,12 @@ app.post('/webhook', async (req, res) => {
       `
     });
 
-    console.log(`✅ Zamówienie od @${username} – ${kwota}`);
+    console.log('Email result:', JSON.stringify(emailResult));
+    if (emailResult.error) {
+      console.error('Resend error:', JSON.stringify(emailResult.error));
+    } else {
+      console.log('Email sent OK, id:', emailResult.data && emailResult.data.id);
+    }
   }
 
   res.json({ received: true });
