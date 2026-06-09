@@ -381,20 +381,20 @@
               <div class="pkg-badge rounded-xl px-2 py-0.5 text-xs font-semibold mb-2 inline-block">Basic</div>
               <div class="text-2xl mb-1">🪴</div>
               <p class="primary-text font-display font-bold text-sm leading-tight">Najtańsze<br/>konta</p>
-              <p class="mt-2 text-violet-500 font-bold text-sm">4,49 zł<span class="muted-text font-normal text-xs"> /1k</span></p>
+              <p class="mt-2 text-violet-500 font-bold text-sm">8,99 zł<span class="muted-text font-normal text-xs"> /1k</span></p>
             </div>
             <div class="pkg-card rounded-2xl p-4 text-center relative" onclick="selectPackage('premium', this)">
               <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-orange-400 text-white text-xs font-bold px-3 py-0.5 rounded-full shadow-sm whitespace-nowrap">Popularny</div>
               <div class="pkg-badge rounded-xl px-2 py-0.5 text-xs font-semibold mb-2 inline-block">Premium</div>
               <div class="text-2xl mb-1">⭐</div>
               <p class="primary-text font-display font-bold text-sm leading-tight">Starsze konta<br/>wysoka jakość</p>
-              <p class="mt-2 text-violet-500 font-bold text-sm">7,99 zł<span class="muted-text font-normal text-xs"> /1k</span></p>
+              <p class="mt-2 text-violet-500 font-bold text-sm">12,99 zł<span class="muted-text font-normal text-xs"> /1k</span></p>
             </div>
             <div class="pkg-card rounded-2xl p-4 text-center" onclick="selectPackage('real', this)">
               <div class="pkg-badge rounded-xl px-2 py-0.5 text-xs font-semibold mb-2 inline-block">Real</div>
               <div class="text-2xl mb-1">🔥</div>
               <p class="primary-text font-display font-bold text-sm leading-tight">Prawdziwe<br/>aktywne konta</p>
-              <p class="mt-2 text-violet-500 font-bold text-sm">11,99 zł<span class="muted-text font-normal text-xs"> /1k</span></p>
+              <p class="mt-2 text-violet-500 font-bold text-sm">14,99 zł<span class="muted-text font-normal text-xs"> /1k</span></p>
             </div>
           </div>
         </div>
@@ -403,17 +403,17 @@
         <div>
           <label class="block text-xs font-semibold section-label uppercase tracking-widest mb-3">3. Ilość obserwujących</label>
           <div class="flex flex-wrap gap-2 mb-4">
-            <button class="qty-pill px-3 py-1.5 rounded-xl" onclick="setQty(100)">100</button>
+            <button class="qty-pill px-3 py-1.5 rounded-xl" onclick="setQty(250)">250</button>
             <button class="qty-pill px-3 py-1.5 rounded-xl" onclick="setQty(500)">500</button>
             <button class="qty-pill active px-3 py-1.5 rounded-xl" onclick="setQty(1000)">1 000</button>
             <button class="qty-pill px-3 py-1.5 rounded-xl" onclick="setQty(2500)">2 500</button>
             <button class="qty-pill px-3 py-1.5 rounded-xl" onclick="setQty(5000)">5 000</button>
             <button class="qty-pill px-3 py-1.5 rounded-xl" onclick="setQty(10000)">10 000</button>
           </div>
-          <input type="range" id="qty-slider" min="100" max="10000" step="100" value="1000"
+          <input type="range" id="qty-slider" min="250" max="10000" step="250" value="1000"
             class="slider-ig w-full" oninput="onSlider(this.value)" />
           <div class="flex justify-between text-xs mt-1.5" style="color:var(--text-muted)">
-            <span>100</span><span>10 000</span>
+            <span>250</span><span>10 000</span>
           </div>
           <div class="mt-3 text-center">
             <span class="text-sm muted-text">Wybrana ilość: </span>
@@ -470,7 +470,7 @@
             </div>
             <div class="text-right">
               <p class="text-xs muted-text mb-0.5">Do zapłaty</p>
-              <p id="price-display" class="price-val font-display font-extrabold text-3xl text-violet-600">4,49 zł</p>
+              <p id="price-display" class="price-val font-display font-extrabold text-3xl text-violet-600">8,99 zł</p>
             </div>
           </div>
           <div class="mt-3 flex items-center gap-2 text-xs muted-text">
@@ -653,7 +653,7 @@
     qty: 1000,
     method: 'card',
   };
-  const prices = { basic: 4.49, premium: 7.99, real: 11.99 };
+  const prices = { basic: 8.99, premium: 12.99, real: 14.99 };
   const packageNames = { basic: 'Basic', premium: 'Premium', real: 'Real' };
   const methodLabels = { card: 'Karta kredytowa/debetowa', blik: 'BLIK', p24: 'Przelewy24' };
 
@@ -710,7 +710,7 @@
   }
 
   // ===== QUANTITY =====
-  const qtyValues = [100, 500, 1000, 2500, 5000, 10000];
+  const qtyValues = [250, 500, 1000, 2500, 5000, 10000];
   function setQty(val) {
     state.qty = val;
     document.getElementById('qty-slider').value = val;
