@@ -6,357 +6,453 @@
   <title>FollowFlow – Obserwujący na Instagram i TikTok</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://js.stripe.com/v3/"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet" />
   <style>
-    /* ===== LIGHT THEME VARS ===== */
     :root {
-      --bg: #fafafa;
-      --bg2: #ffffff;
-      --hero-from: #fdf2f8;
-      --hero-mid: #ede9fe;
-      --hero-to: #e0f2fe;
-      --card-bg: #ffffff;
-      --card-border: #e5e7eb;
-      --card-border-hover: #c4b5fd;
-      --text-primary: #111827;
-      --text-secondary: #6b7280;
-      --text-muted: #9ca3af;
-      --input-bg: #f9fafb;
-      --input-border: #e5e7eb;
-      --summary-bg: #f5f3ff;
-      --summary-border: #ddd6fe;
-      --badge-bg: #f3f4f6;
-      --badge-color: #6b7280;
-      --review-bg: #ffffff;
-      --review-border: #f3f4f6;
-      --trust-bg: #ffffff;
-      --trust-border: #f0e6ff;
-      --nav-bg: rgba(255,255,255,0.85);
-      --nav-border: #f3f4f6;
-      --footer-border: #f3f4f6;
-      --footer-text: #9ca3af;
-      --modal-bg: #ffffff;
-      --modal-details-bg: #f9fafb;
-      --stripe-row-bg: #f9fafb;
-      --stripe-row-border: #f3f4f6;
+      --bg:#fafafa; --bg2:#fff; --hero-from:#fdf2f8; --hero-mid:#ede9fe; --hero-to:#e0f2fe;
+      --card-bg:#fff; --card-border:#e5e7eb; --card-border-hover:#c4b5fd;
+      --text-primary:#111827; --text-secondary:#6b7280; --text-muted:#9ca3af;
+      --input-bg:#f9fafb; --input-border:#e5e7eb;
+      --summary-bg:#f5f3ff; --summary-border:#ddd6fe;
+      --badge-bg:#f3f4f6; --badge-color:#6b7280;
+      --review-bg:#fff; --review-border:#f3f4f6;
+      --trust-bg:#fff; --trust-border:#f0e6ff;
+      --nav-bg:rgba(255,255,255,0.88); --nav-border:#f3f4f6;
+      --footer-border:#f3f4f6; --footer-text:#9ca3af;
+      --modal-bg:#fff; --modal-details-bg:#f9fafb;
+      --stripe-row-bg:#f9fafb; --stripe-row-border:#f3f4f6;
+      --glow-rose:rgba(244,63,94,0.18); --glow-violet:rgba(124,58,237,0.15);
+      --cursor-glow:rgba(124,58,237,0.12);
     }
     html.dark {
-      --bg: #0a0a0f;
-      --bg2: #0f0f17;
-      --hero-from: #12001a;
-      --hero-mid: #0d0520;
-      --hero-to: #000d1a;
-      --card-bg: #15151f;
-      --card-border: #2a2a3a;
-      --card-border-hover: #7c3aed;
-      --text-primary: #f1f0ff;
-      --text-secondary: #a0a0b8;
-      --text-muted: #5a5a72;
-      --input-bg: #1c1c2a;
-      --input-border: #2e2e42;
-      --summary-bg: #1a1030;
-      --summary-border: #3b2d5e;
-      --badge-bg: #222236;
-      --badge-color: #9090b0;
-      --review-bg: #15151f;
-      --review-border: #222236;
-      --trust-bg: #15151f;
-      --trust-border: #252535;
-      --nav-bg: rgba(10,10,15,0.88);
-      --nav-border: #1e1e2e;
-      --footer-border: #1e1e2e;
-      --footer-text: #5a5a72;
-      --modal-bg: #15151f;
-      --modal-details-bg: #1c1c2a;
-      --stripe-row-bg: #1c1c2a;
-      --stripe-row-border: #2a2a3a;
+      --bg:#0a0a0f; --bg2:#0f0f17; --hero-from:#12001a; --hero-mid:#0d0520; --hero-to:#000d1a;
+      --card-bg:#15151f; --card-border:#2a2a3a; --card-border-hover:#7c3aed;
+      --text-primary:#f1f0ff; --text-secondary:#a0a0b8; --text-muted:#5a5a72;
+      --input-bg:#1c1c2a; --input-border:#2e2e42;
+      --summary-bg:#1a1030; --summary-border:#3b2d5e;
+      --badge-bg:#222236; --badge-color:#9090b0;
+      --review-bg:#15151f; --review-border:#222236;
+      --trust-bg:#15151f; --trust-border:#252535;
+      --nav-bg:rgba(10,10,15,0.92); --nav-border:#1e1e2e;
+      --footer-border:#1e1e2e; --footer-text:#5a5a72;
+      --modal-bg:#15151f; --modal-details-bg:#1c1c2a;
+      --stripe-row-bg:#1c1c2a; --stripe-row-border:#2a2a3a;
+      --glow-rose:rgba(244,63,94,0.08); --glow-violet:rgba(124,58,237,0.1);
+      --cursor-glow:rgba(124,58,237,0.08);
     }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);transition:background .3s,color .3s;overflow-x:hidden}
+    h1,h2,h3,.font-display{font-family:'Syne',sans-serif}
 
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text-primary);
-      margin: 0;
-      transition: background 0.3s, color 0.3s;
+    /* ===== CURSOR GLOW ===== */
+    #cursor-glow{
+      pointer-events:none;position:fixed;width:400px;height:400px;border-radius:50%;
+      background:radial-gradient(circle,var(--cursor-glow) 0%,transparent 70%);
+      transform:translate(-50%,-50%);transition:opacity .3s;z-index:0;opacity:0;
     }
-    h1,h2,h3,.font-display { font-family: 'Syne', sans-serif; }
 
     /* ===== HERO ===== */
-    .hero-bg {
-      background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-mid) 40%, var(--hero-to) 100%);
-      position: relative; overflow: hidden;
+    .hero-bg{
+      background:linear-gradient(135deg,var(--hero-from) 0%,var(--hero-mid) 40%,var(--hero-to) 100%);
+      position:relative;overflow:hidden;
     }
-    .hero-bg::before {
-      content:''; position:absolute; width:600px; height:600px;
-      background: radial-gradient(circle, rgba(244,63,94,0.15) 0%, transparent 70%);
-      top:-150px; right:-150px; border-radius:50%; pointer-events:none;
+    .hero-blob{
+      position:absolute;border-radius:50%;pointer-events:none;filter:blur(60px);
+      animation:blobFloat 8s ease-in-out infinite;
     }
-    .hero-bg::after {
-      content:''; position:absolute; width:500px; height:500px;
-      background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%);
-      bottom:-100px; left:-100px; border-radius:50%; pointer-events:none;
-    }
+    .hero-blob-1{width:500px;height:500px;background:var(--glow-rose);top:-100px;right:-100px}
+    .hero-blob-2{width:400px;height:400px;background:var(--glow-violet);bottom:-80px;left:-80px;animation-delay:-4s}
+    @keyframes blobFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
 
-    /* ===== PLATFORM BTNS ===== */
-    .platform-btn {
-      transition: all 0.25s cubic-bezier(.4,0,.2,1);
-      cursor: pointer; border: 2px solid transparent;
+    /* ===== PARTICLES ===== */
+    .particle{
+      position:absolute;border-radius:50%;pointer-events:none;
+      animation:particleFloat linear infinite;opacity:0;
     }
-    .platform-btn.active-ig {
-      background: linear-gradient(135deg,#f43f5e,#c026d3,#7c3aed);
-      color:#fff; border-color:transparent;
-      box-shadow: 0 8px 24px rgba(244,63,94,0.3);
+    @keyframes particleFloat{
+      0%{transform:translateY(100vh) scale(0);opacity:0}
+      10%{opacity:.6}
+      90%{opacity:.3}
+      100%{transform:translateY(-100px) scale(1);opacity:0}
     }
-    .platform-btn.active-tt {
-      background: linear-gradient(135deg,#09090b,#1a1a2e);
-      color:#fff; border-color:#38bdf8;
-      box-shadow: 0 8px 24px rgba(56,189,248,0.3);
-    }
-    .platform-btn:not(.active-ig):not(.active-tt) {
-      background: var(--card-bg); color: var(--text-secondary); border-color: var(--card-border);
-    }
-    .platform-btn:not(.active-ig):not(.active-tt):hover {
-      border-color:#c4b5fd; color:#7c3aed; background: var(--input-bg);
-    }
-
-    /* ===== PACKAGE CARDS ===== */
-    .pkg-card {
-      transition: all 0.25s cubic-bezier(.4,0,.2,1);
-      cursor: pointer;
-      border: 2px solid var(--card-border);
-      background: var(--card-bg);
-    }
-    .pkg-card:hover {
-      border-color: var(--card-border-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 12px 32px rgba(124,58,237,0.12);
-    }
-    .pkg-card.selected {
-      border-color: #7c3aed;
-      box-shadow: 0 12px 40px rgba(124,58,237,0.2);
-    }
-    .pkg-card.selected .pkg-badge {
-      background: linear-gradient(135deg,#7c3aed,#a855f7); color:#fff;
-    }
-    .pkg-badge { transition: all 0.25s; background: var(--badge-bg); color: var(--badge-color); }
-
-    /* ===== SLIDER ===== */
-    input[type=range] {
-      -webkit-appearance:none; appearance:none;
-      width:100%; height:6px; border-radius:9999px; outline:none; cursor:pointer;
-    }
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance:none; appearance:none;
-      width:22px; height:22px; border-radius:50%;
-      background: linear-gradient(135deg,#7c3aed,#a855f7);
-      cursor:pointer; box-shadow:0 2px 8px rgba(124,58,237,0.4); border:3px solid var(--card-bg);
-    }
-    input[type=range]::-moz-range-thumb {
-      width:22px; height:22px; border-radius:50%;
-      background: linear-gradient(135deg,#7c3aed,#a855f7);
-      cursor:pointer; box-shadow:0 2px 8px rgba(124,58,237,0.4); border:3px solid var(--card-bg);
-    }
-    .slider-ig { background: linear-gradient(to right,#f43f5e,#c026d3); }
-    .slider-tt { background: linear-gradient(to right,#38bdf8,#0ea5e9); }
-
-    /* ===== CTA ===== */
-    .cta-btn { transition:all 0.2s cubic-bezier(.4,0,.2,1); position:relative; overflow:hidden; }
-    .cta-btn::before {
-      content:''; position:absolute; inset:0;
-      background:rgba(255,255,255,0.15); opacity:0; transition:opacity 0.2s;
-    }
-    .cta-btn:hover::before { opacity:1; }
-    .cta-btn:hover { transform:translateY(-2px); box-shadow:0 16px 40px rgba(124,58,237,0.35) !important; }
-    .cta-btn:active { transform:translateY(0); }
-    .cta-btn-ig { background:linear-gradient(135deg,#f43f5e,#c026d3,#7c3aed); }
-    .cta-btn-tt { background:linear-gradient(135deg,#09090b 0%,#1a1a2e 50%,#0ea5e9 100%); }
-
-    /* ===== PRICE ANIM ===== */
-    .price-val { transition:all 0.2s; }
-    .price-bounce { animation: pricePop 0.3s cubic-bezier(.34,1.56,.64,1); }
-    @keyframes pricePop {
-      0%{transform:scale(1)} 50%{transform:scale(1.12)} 100%{transform:scale(1)}
-    }
-
-    /* ===== TRUST ===== */
-    .trust-item {
-      background: var(--trust-bg); border:1px solid var(--trust-border);
-      transition: box-shadow 0.2s;
-    }
-    .trust-item:hover { box-shadow: 0 4px 16px rgba(124,58,237,0.1); }
-
-    /* ===== QTY PILLS ===== */
-    .qty-pill {
-      cursor:pointer; transition:all 0.2s;
-      border:1px solid var(--card-border);
-      font-size:0.82rem; font-weight:500;
-      color: var(--text-secondary);
-      background: var(--card-bg);
-    }
-    .qty-pill:hover { border-color:#a855f7; color:#7c3aed; background: var(--input-bg); }
-    .qty-pill.active { background:#7c3aed; color:#fff; border-color:#7c3aed; }
-
-    .stars-row { color:#f59e0b; letter-spacing:-1px; }
-
-    /* ===== FADE IN ===== */
-    .fade-up { opacity:0; transform:translateY(24px); animation:fadeUp 0.6s forwards; }
-    @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
-    .delay-1{animation-delay:0.1s} .delay-2{animation-delay:0.2s}
-    .delay-3{animation-delay:0.3s} .delay-4{animation-delay:0.4s}
-
-    /* ===== MODAL ===== */
-    .modal-overlay {
-      display:none; position:fixed; inset:0;
-      background:rgba(0,0,0,0.55); z-index:100;
-      align-items:center; justify-content:center;
-      backdrop-filter:blur(6px);
-    }
-    .modal-overlay.open { display:flex; }
-    .modal-card { animation: modalIn 0.35s cubic-bezier(.34,1.56,.64,1); }
-    @keyframes modalIn {
-      from{transform:scale(0.85) translateY(20px); opacity:0}
-      to{transform:scale(1) translateY(0); opacity:1}
-    }
-
-    /* ===== DARK MODE TOGGLE ===== */
-    .theme-toggle {
-      width:44px; height:24px; border-radius:9999px;
-      background: #e5e7eb; position:relative; cursor:pointer;
-      transition: background 0.3s; border:none; outline:none; flex-shrink:0;
-    }
-    html.dark .theme-toggle { background: #7c3aed; }
-    .theme-toggle::after {
-      content:''; position:absolute; top:3px; left:3px;
-      width:18px; height:18px; border-radius:50%;
-      background:#fff; transition:transform 0.3s;
-      box-shadow:0 1px 4px rgba(0,0,0,0.2);
-    }
-    html.dark .theme-toggle::after { transform:translateX(20px); }
-
-    /* ===== STRIPE SECTION ===== */
-    .stripe-method {
-      display:flex; align-items:center; gap:10px;
-      padding:10px 14px; border-radius:14px;
-      background:var(--stripe-row-bg); border:1px solid var(--stripe-row-border);
-      cursor:pointer; transition:all 0.2s;
-    }
-    .stripe-method:hover { border-color:#7c3aed; }
-    .stripe-method.selected-method { border-color:#7c3aed; background:var(--summary-bg); }
-    .stripe-method input[type=radio] { accent-color:#7c3aed; }
 
     /* ===== NAV ===== */
-    .nav-wrap {
-      background: var(--nav-bg); border-bottom:1px solid var(--nav-border);
+    .nav-wrap{background:var(--nav-bg);border-bottom:1px solid var(--nav-border);backdrop-filter:blur(20px)}
+
+    /* ===== PLATFORM BTNS ===== */
+    .platform-btn{
+      transition:all .3s cubic-bezier(.4,0,.2,1);cursor:pointer;border:2px solid transparent;
+      position:relative;overflow:hidden;
+    }
+    .platform-btn::after{
+      content:'';position:absolute;inset:0;background:rgba(255,255,255,0);
+      transition:background .2s;
+    }
+    .platform-btn:hover::after{background:rgba(255,255,255,0.08)}
+    .platform-btn.active-ig{
+      background:linear-gradient(135deg,#f43f5e,#c026d3,#7c3aed);
+      color:#fff;box-shadow:0 8px 32px rgba(244,63,94,0.35);
+    }
+    .platform-btn.active-tt{
+      background:linear-gradient(135deg,#09090b,#1a1a2e);
+      color:#fff;border-color:#38bdf8;box-shadow:0 8px 32px rgba(56,189,248,0.3);
+    }
+    .platform-btn:not(.active-ig):not(.active-tt){
+      background:var(--card-bg);color:var(--text-secondary);border-color:var(--card-border);
+    }
+    .platform-btn:not(.active-ig):not(.active-tt):hover{
+      border-color:#c4b5fd;color:#7c3aed;background:var(--input-bg);transform:translateY(-1px);
     }
 
-    /* ===== CARD SHARED ===== */
-    .config-card {
-      background: var(--card-bg); border:1px solid var(--card-border);
+    /* ===== PKG CARDS ===== */
+    .pkg-card{
+      transition:all .3s cubic-bezier(.4,0,.2,1);cursor:pointer;
+      border:2px solid var(--card-border);background:var(--card-bg);
+      position:relative;overflow:hidden;
     }
-    .review-card {
-      background: var(--review-bg); border:1px solid var(--review-border);
+    .pkg-card::before{
+      content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;
+      background:radial-gradient(circle at 50% 0%,rgba(124,58,237,0.08),transparent 70%);
     }
-    .input-field {
-      background: var(--input-bg); border:1px solid var(--input-border);
-      color: var(--text-primary);
-    }
-    .input-field::placeholder { color: var(--text-muted); }
-    .input-field:focus { outline:none; box-shadow:0 0 0 2px #7c3aed44; border-color:#7c3aed; }
-    .summary-box {
-      background: var(--summary-bg); border:1px solid var(--summary-border);
-    }
-    .section-label { color: var(--text-muted); }
-    .muted-text { color: var(--text-secondary); }
-    .primary-text { color: var(--text-primary); }
+    .pkg-card:hover::before{opacity:1}
+    .pkg-card:hover{border-color:var(--card-border-hover);transform:translateY(-4px);box-shadow:0 20px 40px rgba(124,58,237,0.15)}
+    .pkg-card.selected{border-color:#7c3aed;box-shadow:0 16px 48px rgba(124,58,237,0.25)}
+    .pkg-card.selected::before{opacity:1}
+    .pkg-card.selected .pkg-badge{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff}
+    .pkg-badge{transition:all .25s;background:var(--badge-bg);color:var(--badge-color)}
 
-    /* ===== REVIEWS CAROUSEL ===== */
-    .reviews-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+    /* ===== SLIDER ===== */
+    input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:9999px;outline:none;cursor:pointer}
+    input[type=range]::-webkit-slider-thumb{
+      -webkit-appearance:none;appearance:none;width:24px;height:24px;border-radius:50%;
+      background:linear-gradient(135deg,#7c3aed,#a855f7);
+      cursor:pointer;box-shadow:0 2px 12px rgba(124,58,237,0.5);border:3px solid var(--card-bg);
+      transition:transform .15s;
     }
-    @media(max-width:540px){ .reviews-grid { grid-template-columns:1fr; } }
+    input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
+    input[type=range]::-moz-range-thumb{
+      width:24px;height:24px;border-radius:50%;
+      background:linear-gradient(135deg,#7c3aed,#a855f7);
+      cursor:pointer;box-shadow:0 2px 12px rgba(124,58,237,0.5);border:3px solid var(--card-bg);
+    }
+    .slider-ig{background:linear-gradient(to right,#f43f5e,#c026d3)}
+    .slider-tt{background:linear-gradient(to right,#38bdf8,#0ea5e9)}
+
+    /* ===== CTA ===== */
+    .cta-btn{
+      transition:all .25s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden;
+      cursor:pointer;border:none;
+    }
+    .cta-btn::before{
+      content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;
+      background:rgba(255,255,255,0.2);transform:translate(-50%,-50%);
+      transition:width .5s,height .5s;
+    }
+    .cta-btn:hover::before{width:400px;height:400px}
+    .cta-btn:hover{transform:translateY(-3px);box-shadow:0 20px 48px rgba(124,58,237,0.4) !important}
+    .cta-btn:active{transform:translateY(-1px) scale(0.99)}
+    .cta-btn-ig{background:linear-gradient(135deg,#f43f5e,#c026d3,#7c3aed)}
+    .cta-btn-tt{background:linear-gradient(135deg,#09090b 0%,#1a1a2e 50%,#0ea5e9 100%)}
+
+    /* ===== PRICE ANIM ===== */
+    .price-val{transition:all .2s}
+    .price-bounce{animation:pricePop .35s cubic-bezier(.34,1.56,.64,1)}
+    @keyframes pricePop{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+
+    /* ===== TRUST CARDS ===== */
+    .trust-item{
+      background:var(--trust-bg);border:1px solid var(--trust-border);
+      transition:all .3s;cursor:default;
+    }
+    .trust-item:hover{
+      border-color:#c4b5fd;transform:translateY(-3px);
+      box-shadow:0 12px 32px rgba(124,58,237,0.12);
+    }
+    .trust-icon{
+      transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+    }
+    .trust-item:hover .trust-icon{transform:scale(1.2) rotate(5deg)}
+
+    /* ===== QTY PILLS ===== */
+    .qty-pill{
+      cursor:pointer;transition:all .2s;
+      border:1px solid var(--card-border);
+      font-size:.82rem;font-weight:500;
+      color:var(--text-secondary);background:var(--card-bg);
+    }
+    .qty-pill:hover{border-color:#a855f7;color:#7c3aed;background:var(--input-bg);transform:translateY(-1px)}
+    .qty-pill.active{background:#7c3aed;color:#fff;border-color:#7c3aed;box-shadow:0 4px 12px rgba(124,58,237,0.3)}
+
+    .stars-row{color:#f59e0b;letter-spacing:-1px}
+
+    /* ===== FADE IN ===== */
+    .fade-up{opacity:0;transform:translateY(28px);animation:fadeUp .7s cubic-bezier(.4,0,.2,1) forwards}
+    @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+    .delay-1{animation-delay:.1s}.delay-2{animation-delay:.2s}
+    .delay-3{animation-delay:.3s}.delay-4{animation-delay:.45s}
+
+    /* ===== MODAL ===== */
+    .modal-overlay{
+      display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;
+      align-items:center;justify-content:center;backdrop-filter:blur(8px);
+    }
+    .modal-overlay.open{display:flex}
+    .modal-card{animation:modalIn .4s cubic-bezier(.34,1.56,.64,1)}
+    @keyframes modalIn{from{transform:scale(0.8) translateY(30px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+
+    /* ===== DARK TOGGLE ===== */
+    .theme-toggle{
+      width:44px;height:24px;border-radius:9999px;
+      background:#e5e7eb;position:relative;cursor:pointer;
+      transition:background .3s;border:none;outline:none;flex-shrink:0;
+    }
+    html.dark .theme-toggle{background:#7c3aed}
+    .theme-toggle::after{
+      content:'';position:absolute;top:3px;left:3px;
+      width:18px;height:18px;border-radius:50%;
+      background:#fff;transition:transform .3s;
+      box-shadow:0 1px 4px rgba(0,0,0,0.2);
+    }
+    html.dark .theme-toggle::after{transform:translateX(20px)}
+
+    /* ===== STRIPE ===== */
+    .stripe-method{
+      display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;
+      background:var(--stripe-row-bg);border:1px solid var(--stripe-row-border);
+      cursor:pointer;transition:all .2s;
+    }
+    .stripe-method:hover{border-color:#7c3aed;transform:translateX(3px)}
+    .stripe-method.selected-method{border-color:#7c3aed;background:var(--summary-bg)}
+    .stripe-method input[type=radio]{accent-color:#7c3aed}
+
+    /* ===== SHARED ===== */
+    .config-card{background:var(--card-bg);border:1px solid var(--card-border)}
+    .review-card{background:var(--review-bg);border:1px solid var(--review-border);transition:all .25s}
+    .review-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.07);border-color:#c4b5fd}
+    .input-field{background:var(--input-bg);border:1px solid var(--input-border);color:var(--text-primary);transition:all .2s}
+    .input-field::placeholder{color:var(--text-muted)}
+    .input-field:focus{outline:none;box-shadow:0 0 0 3px rgba(124,58,237,0.2);border-color:#7c3aed;background:var(--card-bg)}
+    .summary-box{background:var(--summary-bg);border:1px solid var(--summary-border)}
+    .section-label{color:var(--text-muted)}
+    .muted-text{color:var(--text-secondary)}
+    .primary-text{color:var(--text-primary)}
+
+    /* ===== REVIEWS GRID ===== */
+    .reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:540px){.reviews-grid{grid-template-columns:1fr}}
+
+    /* ===== COUNTER TICKER ===== */
+    .counter-wrap{
+      display:inline-flex;align-items:center;gap:8px;
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:9999px;padding:6px 16px;
+    }
+    .live-dot{
+      width:8px;height:8px;border-radius:50%;background:#22c55e;
+      box-shadow:0 0 0 0 rgba(34,197,94,.6);
+      animation:livePulse 1.5s infinite;
+    }
+    @keyframes livePulse{
+      0%{box-shadow:0 0 0 0 rgba(34,197,94,.6)}
+      70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}
+      100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}
+    }
+
+    /* ===== MARQUEE ===== */
+    .marquee-wrap{overflow:hidden;white-space:nowrap;position:relative}
+    .marquee-wrap::before,.marquee-wrap::after{
+      content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;
+    }
+    .marquee-wrap::before{left:0;background:linear-gradient(to right,var(--bg),transparent)}
+    .marquee-wrap::after{right:0;background:linear-gradient(to left,var(--bg),transparent)}
+    .marquee-track{display:inline-flex;gap:32px;animation:marquee 20s linear infinite}
+    @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .marquee-item{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 18px;border-radius:9999px;
+      border:1px solid var(--card-border);background:var(--card-bg);
+      font-size:.8rem;font-weight:500;color:var(--text-secondary);
+      flex-shrink:0;
+    }
+
+    /* ===== STATS ROW ===== */
+    .stat-card{
+      background:var(--card-bg);border:1px solid var(--card-border);
+      border-radius:20px;padding:20px;text-align:center;
+      transition:all .3s;
+    }
+    .stat-card:hover{border-color:#c4b5fd;transform:translateY(-2px);box-shadow:0 12px 28px rgba(124,58,237,0.1)}
+    .stat-num{
+      font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;
+      background:linear-gradient(135deg,#7c3aed,#f43f5e);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+
+    /* ===== SCROLL REVEAL ===== */
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+
+    /* ===== SHIMMER on PKG selected ===== */
+    @keyframes shimmer{
+      0%{background-position:-200% center}
+      100%{background-position:200% center}
+    }
+    .pkg-card.selected .pkg-shimmer{
+      position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(90deg,transparent,rgba(124,58,237,0.06),transparent);
+      background-size:200%;
+      animation:shimmer 2s infinite;
+    }
+
+    /* ===== INPUT FOCUS GLOW ===== */
+    @keyframes inputGlow{
+      0%,100%{box-shadow:0 0 0 3px rgba(124,58,237,0.15)}
+      50%{box-shadow:0 0 0 4px rgba(124,58,237,0.3)}
+    }
+    .input-field:focus{animation:inputGlow 2s infinite}
+
+    /* ===== TILT CARD ===== */
+    .tilt{transform-style:preserve-3d;transition:transform .15s}
   </style>
 </head>
 <body>
 
+<!-- Cursor glow -->
+<div id="cursor-glow"></div>
+
 <!-- ============ NAVBAR ============ -->
-<nav class="sticky top-0 z-50 nav-wrap backdrop-blur-xl shadow-sm">
+<nav class="sticky top-0 z-50 nav-wrap shadow-sm">
   <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
     <div class="flex items-center gap-2">
-      <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-500 to-violet-600 flex items-center justify-center shadow-md">
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-500 to-violet-600 flex items-center justify-center shadow-md" style="animation:blobFloat 4s ease-in-out infinite">
         <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm3.707 5.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-2-2a1 1 0 111.414-1.414L9 10.586l3.293-3.293a1 1 0 011.414 0z"/></svg>
       </div>
       <span class="font-display font-extrabold primary-text text-xl tracking-tight">FollowFlow</span>
     </div>
     <div class="flex items-center gap-3">
       <div class="hidden sm:flex items-center gap-1.5 text-sm muted-text">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
+        <span class="live-dot"></span>
         <span>Realizacja do 1 dnia roboczego</span>
       </div>
-      <!-- Dark mode toggle -->
       <div class="flex items-center gap-2">
         <span class="text-xs muted-text hidden sm:block" id="theme-label">☀️</span>
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="Zmień motyw"></button>
       </div>
-      <a href="#konfigurator" class="text-sm font-medium text-violet-500 bg-violet-50 dark-hl hover:opacity-80 px-4 py-2 rounded-xl transition-all" style="background:var(--summary-bg);color:#7c3aed">Zamów →</a>
+      <a href="#konfigurator" class="text-sm font-medium px-4 py-2 rounded-xl transition-all hover:opacity-90 hover:scale-105" style="background:var(--summary-bg);color:#7c3aed;transform-origin:center">Zamów →</a>
     </div>
   </div>
 </nav>
 
 <!-- ============ HERO ============ -->
-<section class="hero-bg px-4 pt-16 pb-12 md:pt-24 md:pb-16">
+<section class="hero-bg px-4 pt-16 pb-14 md:pt-24 md:pb-20" style="position:relative">
+  <div class="hero-blob hero-blob-1"></div>
+  <div class="hero-blob hero-blob-2"></div>
+  <div id="particles-container" style="position:absolute;inset:0;pointer-events:none;overflow:hidden"></div>
+
   <div class="max-w-2xl mx-auto text-center relative z-10">
-    <div class="fade-up inline-flex items-center gap-2 text-violet-700 text-xs font-medium px-4 py-2 rounded-full border border-violet-200 mb-6 shadow-sm" style="background:var(--card-bg);opacity:0.9">
-      <span class="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse"></span>
-      Ponad 14 000 zamówień w tym miesiącu
+
+    <!-- Live counter badge -->
+    <div class="fade-up flex justify-center mb-6">
+      <div class="counter-wrap">
+        <span class="live-dot"></span>
+        <span class="text-xs font-semibold primary-text"><span id="live-counter">14 287</span> zamówień w tym miesiącu</span>
+      </div>
     </div>
-    <h1 class="fade-up delay-1 font-display text-4xl md:text-6xl font-extrabold leading-tight tracking-tight mb-4 primary-text">
+
+    <h1 class="fade-up delay-1 font-display text-4xl md:text-6xl font-extrabold leading-tight tracking-tight mb-5 primary-text">
       Zwiększ swoje zasięgi<br/>
-      <span class="bg-gradient-to-r from-rose-500 via-fuchsia-500 to-violet-600 bg-clip-text text-transparent">w kilka sekund</span>
+      <span id="hero-gradient" class="bg-gradient-to-r from-rose-500 via-fuchsia-500 to-violet-600 bg-clip-text text-transparent" style="background-size:200%;animation:shimmer 3s infinite linear;display:inline-block">w kilka sekund</span>
     </h1>
+
     <p class="fade-up delay-2 muted-text text-lg md:text-xl max-w-lg mx-auto mb-8 font-light">
       Obserwujący na Instagram i TikTok – dostawa do 1 dnia roboczego, bez hasła, bezpieczne płatności Stripe.
     </p>
 
     <!-- Platform Toggle -->
-    <div class="fade-up delay-3 flex justify-center gap-3 mb-4">
+    <div class="fade-up delay-3 flex justify-center gap-3 mb-6">
       <button id="btn-ig" onclick="setPlatform('ig')"
-        class="platform-btn active-ig flex items-center gap-2.5 px-6 py-3 rounded-2xl font-display font-semibold text-sm shadow-sm">
+        class="platform-btn active-ig flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-display font-semibold text-sm">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
         Instagram
       </button>
       <button id="btn-tt" onclick="setPlatform('tt')"
-        class="platform-btn flex items-center gap-2.5 px-6 py-3 rounded-2xl font-display font-semibold text-sm shadow-sm">
+        class="platform-btn flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-display font-semibold text-sm">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>
         TikTok
       </button>
     </div>
 
-    <div class="fade-up delay-4 flex flex-wrap justify-center gap-4 text-sm muted-text mt-4">
-      <span class="flex items-center gap-1"><svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Bez hasła</span>
-      <span class="flex items-center gap-1"><svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Do 1 dnia roboczego</span>
-      <span class="flex items-center gap-1"><svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Gwarancja 30 dni</span>
-      <span class="flex items-center gap-1"><svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Płatność Stripe</span>
+    <div class="fade-up delay-4 flex flex-wrap justify-center gap-3 text-sm muted-text">
+      <span class="flex items-center gap-1.5 bg-white/60 dark:bg-white/5 px-3 py-1.5 rounded-full border border-white/40 backdrop-blur-sm" style="border-color:var(--card-border)">
+        <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Bez hasła
+      </span>
+      <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border backdrop-blur-sm" style="border-color:var(--card-border);background:var(--card-bg)">
+        <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Do 1 dnia roboczego
+      </span>
+      <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border backdrop-blur-sm" style="border-color:var(--card-border);background:var(--card-bg)">
+        <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Płatność Stripe
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee-wrap py-4 border-t border-b" style="border-color:var(--card-border)">
+  <div class="marquee-track">
+    <span class="marquee-item">⚡ Ekspresowa realizacja</span>
+    <span class="marquee-item">🔒 SSL 256-bit</span>
+    <span class="marquee-item">📱 Instagram & TikTok</span>
+    <span class="marquee-item">💳 Stripe · BLIK · P24</span>
+    <span class="marquee-item">✅ Bez hasła do konta</span>
+    <span class="marquee-item">🌍 Polska obsługa</span>
+    <span class="marquee-item">📈 +14 000 zamówień</span>
+    <span class="marquee-item">⚡ Ekspresowa realizacja</span>
+    <span class="marquee-item">🔒 SSL 256-bit</span>
+    <span class="marquee-item">📱 Instagram & TikTok</span>
+    <span class="marquee-item">💳 Stripe · BLIK · P24</span>
+    <span class="marquee-item">✅ Bez hasła do konta</span>
+    <span class="marquee-item">🌍 Polska obsługa</span>
+    <span class="marquee-item">📈 +14 000 zamówień</span>
+  </div>
+</div>
+
+<!-- ============ STATS ============ -->
+<section class="py-10 px-4 max-w-2xl mx-auto reveal">
+  <div class="grid grid-cols-3 gap-4">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-orders">14k+</div>
+      <p class="text-xs muted-text mt-1">Zamówień</p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">4,97</div>
+      <p class="text-xs muted-text mt-1">Średnia ocena</p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">&lt;24h</div>
+      <p class="text-xs muted-text mt-1">Czas dostawy</p>
     </div>
   </div>
 </section>
 
 <!-- ============ KONFIGURATOR ============ -->
-<section id="konfigurator" class="py-10 px-4">
+<section id="konfigurator" class="py-6 px-4">
   <div class="max-w-2xl mx-auto">
-    <div class="config-card rounded-3xl shadow-xl overflow-hidden">
+    <div class="config-card rounded-3xl shadow-2xl overflow-hidden reveal" style="box-shadow:0 24px 64px rgba(124,58,237,0.12)">
 
       <!-- Header -->
-      <div class="px-6 pt-6 pb-5 border-b" style="border-color:var(--card-border)">
+      <div class="px-6 pt-6 pb-5 border-b" style="border-color:var(--card-border);background:linear-gradient(135deg,var(--summary-bg),var(--card-bg))">
         <div class="flex items-center gap-3">
-          <div id="platform-icon" class="w-10 h-10 rounded-2xl flex items-center justify-center shadow-md bg-gradient-to-br from-rose-500 to-violet-600">
-            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          <div id="platform-icon" class="w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg bg-gradient-to-br from-rose-500 to-violet-600" style="box-shadow:0 8px 20px rgba(124,58,237,0.35)">
+            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
           </div>
           <div>
-            <p class="text-xs section-label font-medium uppercase tracking-widest">Konfigurator zamówienia</p>
+            <p class="text-xs section-label font-semibold uppercase tracking-widest">Konfigurator zamówienia</p>
             <p id="platform-label" class="font-display font-bold primary-text text-lg">Instagram – Obserwujący</p>
+          </div>
+          <div class="ml-auto hidden sm:flex items-center gap-1 text-xs muted-text">
+            <span class="live-dot" style="width:6px;height:6px"></span>
+            Online
           </div>
         </div>
       </div>
@@ -367,39 +463,45 @@
         <div>
           <label class="block text-xs font-semibold section-label uppercase tracking-widest mb-2">1. Link lub nazwa profilu</label>
           <div class="relative">
-            <span class="absolute left-4 top-1/2 -translate-y-1/2 muted-text font-medium select-none">@</span>
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 muted-text font-semibold select-none text-sm">@</span>
             <input id="username-input" type="text" placeholder="twoja_nazwa_profilu"
-              class="input-field w-full pl-9 pr-4 py-3.5 rounded-2xl transition-all text-sm" />
+              class="input-field w-full pl-9 pr-4 py-4 rounded-2xl text-sm" />
+            <div id="input-checkmark" class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 transition-opacity">
+              <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
           </div>
         </div>
 
-        <!-- Step 2: Package -->
+        <!-- Step 2 -->
         <div>
           <label class="block text-xs font-semibold section-label uppercase tracking-widest mb-3">2. Wybierz pakiet</label>
           <div class="grid grid-cols-3 gap-3">
             <div class="pkg-card selected rounded-2xl p-4 text-center" onclick="selectPackage('basic', this)">
+              <div class="pkg-shimmer rounded-2xl"></div>
               <div class="pkg-badge rounded-xl px-2 py-0.5 text-xs font-semibold mb-2 inline-block">Basic</div>
-              <div class="text-2xl mb-1">🪴</div>
+              <div class="text-2xl mb-1.5" style="transition:transform .3s" onmouseenter="this.style.transform='scale(1.3) rotate(-5deg)'" onmouseleave="this.style.transform='scale(1)'">🪴</div>
               <p class="primary-text font-display font-bold text-sm leading-tight">Najtańsze<br/>konta</p>
               <p class="mt-2 text-violet-500 font-bold text-sm">8,99 zł<span class="muted-text font-normal text-xs"> /1k</span></p>
             </div>
             <div class="pkg-card rounded-2xl p-4 text-center relative" onclick="selectPackage('premium', this)">
-              <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-orange-400 text-white text-xs font-bold px-3 py-0.5 rounded-full shadow-sm whitespace-nowrap">Popularny</div>
+              <div class="pkg-shimmer rounded-2xl"></div>
+              <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-orange-400 text-white text-xs font-bold px-3 py-0.5 rounded-full shadow whitespace-nowrap" style="animation:blobFloat 3s ease-in-out infinite">Popularny</div>
               <div class="pkg-badge rounded-xl px-2 py-0.5 text-xs font-semibold mb-2 inline-block">Premium</div>
-              <div class="text-2xl mb-1">⭐</div>
+              <div class="text-2xl mb-1.5" style="transition:transform .3s" onmouseenter="this.style.transform='scale(1.3) rotate(5deg)'" onmouseleave="this.style.transform='scale(1)'">⭐</div>
               <p class="primary-text font-display font-bold text-sm leading-tight">Starsze konta<br/>wysoka jakość</p>
               <p class="mt-2 text-violet-500 font-bold text-sm">12,99 zł<span class="muted-text font-normal text-xs"> /1k</span></p>
             </div>
             <div class="pkg-card rounded-2xl p-4 text-center" onclick="selectPackage('real', this)">
+              <div class="pkg-shimmer rounded-2xl"></div>
               <div class="pkg-badge rounded-xl px-2 py-0.5 text-xs font-semibold mb-2 inline-block">Real</div>
-              <div class="text-2xl mb-1">🔥</div>
+              <div class="text-2xl mb-1.5" style="transition:transform .3s" onmouseenter="this.style.transform='scale(1.3) rotate(-5deg)'" onmouseleave="this.style.transform='scale(1)'">🔥</div>
               <p class="primary-text font-display font-bold text-sm leading-tight">Prawdziwe<br/>aktywne konta</p>
               <p class="mt-2 text-violet-500 font-bold text-sm">14,99 zł<span class="muted-text font-normal text-xs"> /1k</span></p>
             </div>
           </div>
         </div>
 
-        <!-- Step 3: Quantity -->
+        <!-- Step 3 -->
         <div>
           <label class="block text-xs font-semibold section-label uppercase tracking-widest mb-3">3. Ilość obserwujących</label>
           <div class="flex flex-wrap gap-2 mb-4">
@@ -412,16 +514,16 @@
           </div>
           <input type="range" id="qty-slider" min="250" max="10000" step="250" value="1000"
             class="slider-ig w-full" oninput="onSlider(this.value)" />
-          <div class="flex justify-between text-xs mt-1.5" style="color:var(--text-muted)">
+          <div class="flex justify-between text-xs mt-2" style="color:var(--text-muted)">
             <span>250</span><span>10 000</span>
           </div>
           <div class="mt-3 text-center">
             <span class="text-sm muted-text">Wybrana ilość: </span>
-            <span id="qty-display" class="font-display font-bold text-violet-600 text-lg">1 000</span>
+            <span id="qty-display" class="font-display font-bold text-violet-600 text-xl">1 000</span>
           </div>
         </div>
 
-        <!-- Step 4: Payment method -->
+        <!-- Step 4 -->
         <div>
           <label class="block text-xs font-semibold section-label uppercase tracking-widest mb-3">4. Metoda płatności</label>
           <div class="space-y-2">
@@ -440,21 +542,14 @@
             <label class="stripe-method" id="method-blik" onclick="selectMethod('blik')">
               <input type="radio" name="payment" value="blik" />
               <svg class="w-8 h-8" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="8" fill="#e53935"/><text x="7" y="26" font-size="13" fill="white" font-family="Arial" font-weight="bold">BLIK</text></svg>
-              <div>
-                <p class="text-sm font-semibold primary-text">BLIK</p>
-                <p class="text-xs muted-text">Szybka płatność kodem BLIK</p>
-              </div>
+              <div><p class="text-sm font-semibold primary-text">BLIK</p><p class="text-xs muted-text">Szybka płatność kodem BLIK</p></div>
             </label>
             <label class="stripe-method" id="method-p24" onclick="selectMethod('p24')">
               <input type="radio" name="payment" value="p24" />
               <svg class="w-8 h-8" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="8" fill="#cc0000"/><text x="4" y="26" font-size="12" fill="white" font-family="Arial" font-weight="bold">P24</text></svg>
-              <div>
-                <p class="text-sm font-semibold primary-text">Przelewy24</p>
-                <p class="text-xs muted-text">Przelew online, wszystkie banki PL</p>
-              </div>
+              <div><p class="text-sm font-semibold primary-text">Przelewy24</p><p class="text-xs muted-text">Przelew online, wszystkie banki PL</p></div>
             </label>
           </div>
-          <!-- Stripe badge -->
           <div class="mt-3 flex items-center gap-2 text-xs muted-text">
             <svg class="w-12 h-5 flex-shrink-0" viewBox="0 0 60 25" fill="none"><rect width="60" height="25" rx="5" fill="#635bff"/><text x="8" y="17" font-size="12" fill="white" font-family="Arial" font-weight="bold">stripe</text></svg>
             <span>Płatności obsługiwane przez Stripe – szyfrowanie SSL 256-bit, PCI DSS Level 1</span>
@@ -462,8 +557,9 @@
         </div>
 
         <!-- Summary -->
-        <div class="summary-box rounded-2xl p-5">
-          <div class="flex items-center justify-between">
+        <div class="summary-box rounded-2xl p-5" style="position:relative;overflow:hidden">
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(124,58,237,0.03),transparent);pointer-events:none"></div>
+          <div class="flex items-center justify-between relative">
             <div>
               <p class="text-xs muted-text mb-0.5">Podsumowanie</p>
               <p id="summary-desc" class="primary-text text-sm font-medium">Pakiet Basic · 1 000 szt.</p>
@@ -473,7 +569,7 @@
               <p id="price-display" class="price-val font-display font-extrabold text-3xl text-violet-600">8,99 zł</p>
             </div>
           </div>
-          <div class="mt-3 flex items-center gap-2 text-xs muted-text">
+          <div class="mt-3 flex items-center gap-2 text-xs muted-text relative">
             <svg class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
             Bezpieczna płatność przez Stripe · Realizacja do 1 dnia roboczego
           </div>
@@ -481,7 +577,7 @@
 
         <!-- CTA -->
         <button id="cta-btn" onclick="handleOrder()"
-          class="cta-btn cta-btn-ig w-full py-4 rounded-2xl text-white font-display font-bold text-lg shadow-lg flex items-center justify-center gap-3">
+          class="cta-btn cta-btn-ig w-full py-4 rounded-2xl text-white font-display font-bold text-lg flex items-center justify-center gap-3" style="box-shadow:0 12px 32px rgba(124,58,237,0.3)">
           <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
           Zapłać przez Stripe
         </button>
@@ -495,40 +591,39 @@
 </section>
 
 <!-- ============ TRUST ============ -->
-<section class="py-10 px-4 max-w-2xl mx-auto">
+<section class="py-10 px-4 max-w-2xl mx-auto reveal">
   <p class="text-center text-xs font-semibold uppercase tracking-widest section-label mb-6">Dlaczego warto nam zaufać?</p>
   <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
     <div class="trust-item rounded-2xl p-5 text-center">
-      <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3 text-xl" style="background:var(--summary-bg)">⚡</div>
+      <div class="trust-icon w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl" style="background:var(--summary-bg)">⚡</div>
       <p class="font-display font-bold primary-text text-sm mb-1">Ekspresowa dostawa</p>
       <p class="muted-text text-xs">Obserwujący trafiają na Twój profil do 1 dnia roboczego</p>
     </div>
     <div class="trust-item rounded-2xl p-5 text-center">
-      <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3 text-xl" style="background:#fff1f2">🛡️</div>
-      <p class="font-display font-bold primary-text text-sm mb-1">Gwarancja 30 dni</p>
-      <p class="muted-text text-xs">Uzupełniamy ubytki bez dodatkowych opłat przez miesiąc</p>
-    </div>
-    <div class="trust-item rounded-2xl p-5 text-center">
-      <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3 text-xl" style="background:#f0fdf4">🔒</div>
+      <div class="trust-icon w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl" style="background:#f0fdf4">🔒</div>
       <p class="font-display font-bold primary-text text-sm mb-1">Stripe & SSL</p>
       <p class="muted-text text-xs">Płatności przez Stripe – standard PCI DSS, szyfrowanie SSL</p>
+    </div>
+    <div class="trust-item rounded-2xl p-5 text-center">
+      <div class="trust-icon w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl" style="background:#fef9ee">🇵🇱</div>
+      <p class="font-display font-bold primary-text text-sm mb-1">Polska obsługa</p>
+      <p class="muted-text text-xs">Wsparcie po polsku, płatności w PLN, BLIK i Przelewy24</p>
     </div>
   </div>
 </section>
 
 <!-- ============ OPINIE ============ -->
-<section class="py-10 px-4 max-w-2xl mx-auto">
+<section class="py-10 px-4 max-w-2xl mx-auto reveal">
   <div class="text-center mb-8">
     <p class="text-xs font-semibold uppercase tracking-widest section-label mb-2">Opinie klientów</p>
     <h2 class="font-display font-extrabold text-2xl primary-text">Co mówią nasi klienci?</h2>
     <div class="flex items-center justify-center gap-2 mt-2">
-      <span class="stars-row text-lg">★★★★★</span>
-      <span class="text-sm font-semibold primary-text">4,97</span>
+      <span class="stars-row text-xl">★★★★★</span>
+      <span class="text-sm font-bold primary-text">4,97</span>
       <span class="text-xs muted-text">/ 5.0 · 1 284 opinie</span>
     </div>
   </div>
   <div class="reviews-grid">
-
     <div class="review-card rounded-2xl p-4 shadow-sm">
       <div class="flex items-center gap-2 mb-2">
         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-rose-400 to-violet-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">KW</div>
@@ -538,7 +633,6 @@
       <p class="muted-text text-sm">„Zamawiałam pakiet Premium na Instagram. Obserwujący pojawili się następnego dnia rano – super jakość, zdecydowanie polecam!"</p>
       <p class="text-xs muted-text mt-2 opacity-60">2 dni temu</p>
     </div>
-
     <div class="review-card rounded-2xl p-4 shadow-sm">
       <div class="flex items-center gap-2 mb-2">
         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-sky-400 to-cyan-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">MT</div>
@@ -548,27 +642,24 @@
       <p class="muted-text text-sm">„TikTok Real – pakiet 5000 szt. Dostawa tego samego dnia roboczego wieczorem. Moje wideo zaczęło się kręcić!"</p>
       <p class="text-xs muted-text mt-2 opacity-60">4 dni temu</p>
     </div>
-
     <div class="review-card rounded-2xl p-4 shadow-sm">
       <div class="flex items-center gap-2 mb-2">
         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">AK</div>
         <div><p class="font-semibold primary-text text-sm">Agnieszka K.</p><p class="text-xs muted-text">Instagram · Basic</p></div>
         <span class="stars-row text-xs ml-auto">★★★★★</span>
       </div>
-      <p class="muted-text text-sm">„Płatność Stripe poszła błyskawicznie, potwierdzenie mailem od razu. Obserwujący w kilka godzin. Profesjonalna obsługa!"</p>
+      <p class="muted-text text-sm">„Płatność Stripe poszła błyskawicznie, potwierdzenie mailem od razu. Profesjonalna obsługa!"</p>
       <p class="text-xs muted-text mt-2 opacity-60">1 tydzień temu</p>
     </div>
-
     <div class="review-card rounded-2xl p-4 shadow-sm">
       <div class="flex items-center gap-2 mb-2">
         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">PB</div>
         <div><p class="font-semibold primary-text text-sm">Patryk B.</p><p class="text-xs muted-text">TikTok · Premium</p></div>
         <span class="stars-row text-xs ml-auto">★★★★★</span>
       </div>
-      <p class="muted-text text-sm">„Drugi raz korzystam, bo pierwszy był świetny. 2500 obserwujących TikTok – dostawa następnego dnia. Strona prosta i bezpieczna."</p>
+      <p class="muted-text text-sm">„Drugi raz korzystam. 2500 obserwujących TikTok – dostawa następnego dnia. Strona prosta i bezpieczna."</p>
       <p class="text-xs muted-text mt-2 opacity-60">1 tydzień temu</p>
     </div>
-
     <div class="review-card rounded-2xl p-4 shadow-sm">
       <div class="flex items-center gap-2 mb-2">
         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-fuchsia-400 to-pink-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">EJ</div>
@@ -578,19 +669,16 @@
       <p class="muted-text text-sm">„Pakiet Real to inna liga – konta wyglądają na prawdziwe, zaangażowanie wzrosło. Zapłaciłam kartą przez Stripe, zero problemów."</p>
       <p class="text-xs muted-text mt-2 opacity-60">2 tygodnie temu</p>
     </div>
-
     <div class="review-card rounded-2xl p-4 shadow-sm">
       <div class="flex items-center gap-2 mb-2">
-        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">ŁN</div>
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">LN</div>
         <div><p class="font-semibold primary-text text-sm">Łukasz N.</p><p class="text-xs muted-text">Instagram · Premium</p></div>
         <span class="stars-row text-xs ml-auto">★★★★☆</span>
       </div>
-      <p class="muted-text text-sm">„Dostawa trochę ponad 12 godzin, ale mieściło się w dniu roboczym. Jakość Premium zdecydowanie lepsza niż inne serwisy."</p>
+      <p class="muted-text text-sm">„Dostawa ponad 12 godzin, ale mieściło się w dniu roboczym. Jakość Premium zdecydowanie lepsza niż inne serwisy."</p>
       <p class="text-xs muted-text mt-2 opacity-60">3 tygodnie temu</p>
     </div>
-
   </div>
-
   <div class="mt-6 text-center">
     <div class="inline-flex items-center gap-3 rounded-2xl px-6 py-3 border" style="background:var(--card-bg);border-color:var(--card-border)">
       <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -600,27 +688,25 @@
 </section>
 
 <!-- ============ FOOTER ============ -->
-<footer class="border-t py-6 px-4 text-center text-xs mt-4" style="border-color:var(--footer-border);color:var(--footer-text)">
-  <p class="font-display font-bold primary-text mb-1">FollowFlow</p>
-  <div class="flex justify-center gap-1 mb-2">
+<footer class="border-t py-8 px-4 text-center text-xs mt-4" style="border-color:var(--footer-border);color:var(--footer-text)">
+  <p class="font-display font-bold primary-text text-base mb-2">FollowFlow</p>
+  <div class="flex justify-center gap-1 mb-3 items-center">
     <svg viewBox="0 0 60 25" width="45" height="20" fill="none"><rect width="60" height="25" rx="5" fill="#635bff"/><text x="8" y="17" font-size="12" fill="white" font-family="Arial" font-weight="bold">stripe</text></svg>
-    <span class="flex items-center gap-1 ml-2">Powered by Stripe · PCI DSS · SSL 256-bit</span>
+    <span class="ml-1">Powered by Stripe · PCI DSS · SSL 256-bit</span>
   </div>
   <p>© 2025 FollowFlow. Wszelkie prawa zastrzeżone. ·
-    <a href="#" class="hover:text-violet-500">Regulamin</a> ·
-    <a href="#" class="hover:text-violet-500">Polityka prywatności</a>
+    <a href="#" class="hover:text-violet-500 transition-colors">Regulamin</a> ·
+    <a href="#" class="hover:text-violet-500 transition-colors">Polityka prywatności</a>
   </p>
 </footer>
 
-<!-- ============ MODAL (Stripe) ============ -->
+<!-- ============ MODAL ============ -->
 <div id="order-modal" class="modal-overlay" onclick="closeModal(event)">
   <div class="modal-card rounded-3xl shadow-2xl p-8 max-w-sm w-full mx-4 text-center" style="background:var(--modal-bg)">
     <div id="modal-icon" class="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center mx-auto mb-4 text-3xl shadow-lg">💳</div>
     <h3 id="modal-title" class="font-display font-extrabold text-xl primary-text mb-2">Podsumowanie zamówienia</h3>
     <p id="modal-text" class="muted-text text-sm mb-5">Sprawdź szczegóły i przejdź do płatności Stripe</p>
     <div id="modal-details" class="rounded-2xl p-4 text-left text-sm mb-5 space-y-1.5" style="background:var(--modal-details-bg);color:var(--text-secondary)"></div>
-
-    <!-- Stripe Elements placeholder -->
     <div id="stripe-info" class="mb-5 rounded-2xl p-4 border text-left text-sm" style="background:var(--summary-bg);border-color:var(--summary-border)">
       <div class="flex items-center gap-2 mb-2">
         <svg viewBox="0 0 60 25" width="42" height="17" fill="none"><rect width="60" height="25" rx="5" fill="#635bff"/><text x="8" y="17" font-size="12" fill="white" font-family="Arial" font-weight="bold">stripe</text></svg>
@@ -628,9 +714,8 @@
       </div>
       <p class="text-xs muted-text">Płatność jest szyfrowana i bezpieczna. Realizacja zamówienia do <strong class="primary-text">1 dnia roboczego</strong> od potwierdzenia płatności.</p>
     </div>
-
     <button id="pay-btn" onclick="initiateStripePayment()"
-      class="w-full py-3 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-display font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2">
+      class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-display font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2">
       <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
       Zapłać teraz
     </button>
@@ -638,33 +723,75 @@
   </div>
 </div>
 
-<!-- ============ JAVASCRIPT ============ -->
+<!-- ============ JS ============ -->
 <script>
-  // ======================================
-  // STRIPE CONFIG – wstaw swój Publishable Key
-  // ======================================
+  // ===== STRIPE =====
   const STRIPE_PK = 'pk_live_51R1XIeH8Z8w2dY6ZAWZMfUApKrXjVWhOkjXFCUsdu9UMYmaT0TOEwGthMlK37bYRbsvIgGFwBPsimvKgOKtfOTeX00gNb6nQdi';
   const stripeInstance = Stripe(STRIPE_PK);
 
   // ===== STATE =====
-  let state = {
-    platform: 'ig',
-    package: 'basic',
-    qty: 1000,
-    method: 'card',
-  };
-  const prices = { basic: 8.99, premium: 12.99, real: 14.99 };
-  const packageNames = { basic: 'Basic', premium: 'Premium', real: 'Real' };
-  const methodLabels = { card: 'Karta kredytowa/debetowa', blik: 'BLIK', p24: 'Przelewy24' };
+  let state = { platform:'ig', package:'basic', qty:1000, method:'card' };
+  const prices = { basic:8.99, premium:12.99, real:14.99 };
+  const packageNames = { basic:'Basic', premium:'Premium', real:'Real' };
+  const methodLabels = { card:'Karta kredytowa/debetowa', blik:'BLIK', p24:'Przelewy24' };
+
+  // ===== CURSOR GLOW =====
+  const glowEl = document.getElementById('cursor-glow');
+  document.addEventListener('mousemove', e => {
+    glowEl.style.opacity = '1';
+    glowEl.style.left = e.clientX + 'px';
+    glowEl.style.top = e.clientY + 'px';
+  });
+  document.addEventListener('mouseleave', () => { glowEl.style.opacity = '0' });
+
+  // ===== PARTICLES =====
+  function spawnParticle() {
+    const c = document.getElementById('particles-container');
+    if (!c) return;
+    const p = document.createElement('div');
+    const size = Math.random() * 6 + 3;
+    const colors = ['rgba(124,58,237,0.5)','rgba(244,63,94,0.4)','rgba(168,85,247,0.5)','rgba(56,189,248,0.4)'];
+    p.className = 'particle';
+    p.style.cssText = `
+      width:${size}px;height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      left:${Math.random()*100}%;
+      animation-duration:${Math.random()*8+6}s;
+      animation-delay:${Math.random()*4}s;
+    `;
+    c.appendChild(p);
+    setTimeout(() => p.remove(), 14000);
+  }
+  setInterval(spawnParticle, 800);
+
+  // ===== LIVE COUNTER =====
+  let liveCount = 14287;
+  setInterval(() => {
+    if (Math.random() > 0.6) {
+      liveCount += Math.floor(Math.random() * 3) + 1;
+      const el = document.getElementById('live-counter');
+      if (el) el.textContent = liveCount.toLocaleString('pl-PL');
+    }
+  }, 4000);
+
+  // ===== SCROLL REVEAL =====
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ===== INPUT CHECKMARK =====
+  document.getElementById('username-input').addEventListener('input', function() {
+    const ck = document.getElementById('input-checkmark');
+    ck.style.opacity = this.value.trim().length > 2 ? '1' : '0';
+  });
 
   // ===== DARK MODE =====
   function toggleTheme() {
-    const html = document.documentElement;
-    const isDark = html.classList.toggle('dark');
+    const isDark = document.documentElement.classList.toggle('dark');
     document.getElementById('theme-label').textContent = isDark ? '🌙' : '☀️';
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
   }
-  // Restore saved theme
   if (localStorage.getItem('theme') === 'dark') {
     document.documentElement.classList.add('dark');
     document.getElementById('theme-label').textContent = '🌙';
@@ -675,28 +802,30 @@
     state.platform = platform;
     const btnIG = document.getElementById('btn-ig');
     const btnTT = document.getElementById('btn-tt');
+    btnIG.className = 'platform-btn flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-display font-semibold text-sm';
+    btnTT.className = 'platform-btn flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-display font-semibold text-sm';
     const label = document.getElementById('platform-label');
     const icon = document.getElementById('platform-icon');
     const slider = document.getElementById('qty-slider');
     const ctaBtn = document.getElementById('cta-btn');
-
-    btnIG.className = 'platform-btn flex items-center gap-2.5 px-6 py-3 rounded-2xl font-display font-semibold text-sm shadow-sm';
-    btnTT.className = 'platform-btn flex items-center gap-2.5 px-6 py-3 rounded-2xl font-display font-semibold text-sm shadow-sm';
-
     if (platform === 'ig') {
       btnIG.classList.add('active-ig');
       label.textContent = 'Instagram – Obserwujący';
-      icon.className = 'w-10 h-10 rounded-2xl flex items-center justify-center shadow-md bg-gradient-to-br from-rose-500 to-violet-600';
-      icon.innerHTML = `<svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>`;
+      icon.className = 'w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg bg-gradient-to-br from-rose-500 to-violet-600';
+      icon.style.boxShadow = '0 8px 20px rgba(124,58,237,0.35)';
+      icon.innerHTML = `<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>`;
       slider.className = 'slider-ig w-full';
-      ctaBtn.className = 'cta-btn cta-btn-ig w-full py-4 rounded-2xl text-white font-display font-bold text-lg shadow-lg flex items-center justify-center gap-3';
+      ctaBtn.className = 'cta-btn cta-btn-ig w-full py-4 rounded-2xl text-white font-display font-bold text-lg flex items-center justify-center gap-3';
+      ctaBtn.style.boxShadow = '0 12px 32px rgba(124,58,237,0.3)';
     } else {
       btnTT.classList.add('active-tt');
       label.textContent = 'TikTok – Obserwujący';
-      icon.className = 'w-10 h-10 rounded-2xl flex items-center justify-center shadow-md bg-gradient-to-br from-gray-900 to-sky-700';
-      icon.innerHTML = `<svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>`;
+      icon.className = 'w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg bg-gradient-to-br from-gray-900 to-sky-700';
+      icon.style.boxShadow = '0 8px 20px rgba(56,189,248,0.3)';
+      icon.innerHTML = `<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>`;
       slider.className = 'slider-tt w-full';
-      ctaBtn.className = 'cta-btn cta-btn-tt w-full py-4 rounded-2xl text-white font-display font-bold text-lg shadow-lg flex items-center justify-center gap-3';
+      ctaBtn.className = 'cta-btn cta-btn-tt w-full py-4 rounded-2xl text-white font-display font-bold text-lg flex items-center justify-center gap-3';
+      ctaBtn.style.boxShadow = '0 12px 32px rgba(56,189,248,0.25)';
     }
     updatePrice();
   }
@@ -709,8 +838,8 @@
     updatePrice();
   }
 
-  // ===== QUANTITY =====
-  const qtyValues = [250, 500, 1000, 2500, 5000, 10000];
+  // ===== QTY =====
+  const qtyValues = [250,500,1000,2500,5000,10000];
   function setQty(val) {
     state.qty = val;
     document.getElementById('qty-slider').value = val;
@@ -723,33 +852,29 @@
     updatePills(parseInt(val)); updatePrice();
   }
   function updatePills(val) {
-    document.querySelectorAll('.qty-pill').forEach((pill, i) => {
-      pill.classList.toggle('active', qtyValues[i] === val);
-    });
+    document.querySelectorAll('.qty-pill').forEach((p,i) => p.classList.toggle('active', qtyValues[i]===val));
   }
 
-  // ===== PAYMENT METHOD =====
+  // ===== METHOD =====
   function selectMethod(method) {
     state.method = method;
     ['card','blik','p24'].forEach(m => {
-      const el = document.getElementById('method-' + m);
-      el.classList.toggle('selected-method', m === method);
-      el.querySelector('input').checked = (m === method);
+      const el = document.getElementById('method-'+m);
+      el.classList.toggle('selected-method', m===method);
+      el.querySelector('input').checked = (m===method);
     });
   }
 
   // ===== PRICE =====
   function updatePrice() {
-    const pricePerK = prices[state.package];
-    const total = (pricePerK * state.qty) / 1000;
-    const formatted = total.toFixed(2).replace('.', ',') + ' zł';
+    const total = (prices[state.package] * state.qty) / 1000;
+    const formatted = total.toFixed(2).replace('.',',') + ' zł';
     const priceEl = document.getElementById('price-display');
     priceEl.textContent = formatted;
     priceEl.classList.remove('price-bounce');
     void priceEl.offsetWidth;
     priceEl.classList.add('price-bounce');
-    document.getElementById('summary-desc').textContent =
-      `Pakiet ${packageNames[state.package]} · ${state.qty.toLocaleString('pl-PL')} szt.`;
+    document.getElementById('summary-desc').textContent = `Pakiet ${packageNames[state.package]} · ${state.qty.toLocaleString('pl-PL')} szt.`;
   }
 
   // ===== ORDER =====
@@ -757,30 +882,24 @@
     const username = document.getElementById('username-input').value.trim();
     if (!username) {
       const input = document.getElementById('username-input');
-      input.style.boxShadow = '0 0 0 2px #f43f5e88';
+      input.style.boxShadow = '0 0 0 3px rgba(244,63,94,0.3)';
       input.style.borderColor = '#f43f5e';
       input.placeholder = 'Wpisz nazwę profilu, aby kontynuować!';
       input.focus();
-      setTimeout(() => {
-        input.style.boxShadow = '';
-        input.style.borderColor = '';
-        input.placeholder = 'twoja_nazwa_profilu';
-      }, 2500);
+      setTimeout(() => { input.style.boxShadow=''; input.style.borderColor=''; input.placeholder='twoja_nazwa_profilu'; }, 2500);
       return;
     }
-    const pricePerK = prices[state.package];
-    const total = (pricePerK * state.qty) / 1000;
-    const formatted = total.toFixed(2).replace('.', ',') + ' zł';
-    const platform = state.platform === 'ig' ? 'Instagram' : 'TikTok';
-
+    const total = (prices[state.package] * state.qty) / 1000;
+    const formatted = total.toFixed(2).replace('.',',') + ' zł';
+    const platform = state.platform==='ig' ? 'Instagram' : 'TikTok';
     document.getElementById('modal-details').innerHTML = `
       <div class="flex justify-between py-1" style="border-bottom:1px solid var(--card-border)"><span style="color:var(--text-muted)">Platforma</span><span style="font-weight:600;color:var(--text-primary)">${platform}</span></div>
       <div class="flex justify-between py-1" style="border-bottom:1px solid var(--card-border)"><span style="color:var(--text-muted)">Profil</span><span style="font-weight:600;color:var(--text-primary)">@${username.replace('@','')}</span></div>
       <div class="flex justify-between py-1" style="border-bottom:1px solid var(--card-border)"><span style="color:var(--text-muted)">Pakiet</span><span style="font-weight:600;color:var(--text-primary)">${packageNames[state.package]}</span></div>
       <div class="flex justify-between py-1" style="border-bottom:1px solid var(--card-border)"><span style="color:var(--text-muted)">Ilość</span><span style="font-weight:600;color:var(--text-primary)">${state.qty.toLocaleString('pl-PL')} obserwujących</span></div>
-      <div class="flex justify-between py-1" style="border-bottom:1px solid var(--card-border)"><span style="color:var(--text-muted)">Metoda płatności</span><span style="font-weight:600;color:var(--text-primary)">${methodLabels[state.method]}</span></div>
+      <div class="flex justify-between py-1" style="border-bottom:1px solid var(--card-border)"><span style="color:var(--text-muted)">Metoda</span><span style="font-weight:600;color:var(--text-primary)">${methodLabels[state.method]}</span></div>
       <div class="flex justify-between py-1.5 mt-1"><span style="font-weight:700;color:var(--text-primary)">Razem</span><span style="font-weight:800;color:#7c3aed;font-size:1.1rem">${formatted}</span></div>
-      <div class="text-xs mt-1" style="color:var(--text-muted)">⏱ Realizacja do <strong style="color:var(--text-primary)">1 dnia roboczego</strong> od potwierdzenia płatności</div>
+      <div class="text-xs mt-1" style="color:var(--text-muted)">⏱ Realizacja do <strong style="color:var(--text-primary)">1 dnia roboczego</strong></div>
     `;
     document.getElementById('order-modal').classList.add('open');
   }
@@ -788,75 +907,41 @@
   // ===== STRIPE PAYMENT =====
   async function initiateStripePayment() {
     const payBtn = document.getElementById('pay-btn');
-    payBtn.textContent = 'Inicjowanie płatności…';
+    payBtn.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Inicjowanie...';
     payBtn.disabled = true;
-
     const username = document.getElementById('username-input').value.trim();
-    const pricePerK = prices[state.package];
-    const totalGrosze = Math.round((pricePerK * state.qty / 1000) * 100);
-
+    const totalGrosze = Math.round((prices[state.package] * state.qty / 1000) * 100);
     try {
       const res = await fetch('https://followflow-production.up.railway.app/create-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          amount: totalGrosze,
-          platform: state.platform,
-          package: state.package,
-          qty: state.qty,
-          username: username.replace('@',''),
-          method: state.method
-        })
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ amount:totalGrosze, platform:state.platform, package:state.package, qty:state.qty, username:username.replace('@',''), method:state.method })
       });
-
       const { url, error } = await res.json();
       if (error) throw new Error(error);
       window.location.href = url;
-
-    } catch (err) {
+    } catch(err) {
       alert('Błąd połączenia z serwerem: ' + err.message);
     }
-
-    payBtn.textContent = 'Zapłać teraz';
+    payBtn.innerHTML = '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg> Zapłać teraz';
     payBtn.disabled = false;
   }
 
-  function showSuccessModal() {
-    // Reuse modal as success screen
-    document.getElementById('modal-icon').textContent = '🎉';
-    document.getElementById('modal-title').textContent = 'Płatność przyjęta!';
-    document.getElementById('modal-text').textContent = 'Dziękujemy za zamówienie. Realizacja nastąpi do 1 dnia roboczego.';
-    document.getElementById('modal-details').innerHTML = `
-      <div class="flex items-start gap-3 p-3 rounded-xl" style="background:var(--summary-bg)">
-        <svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <div>
-          <p class="text-sm font-semibold" style="color:var(--text-primary)">Zamówienie potwierdzone</p>
-          <p class="text-xs mt-0.5" style="color:var(--text-secondary)">Potwierdzenie zostanie wysłane mailem. Obserwujący dotrą do <strong>1 dnia roboczego</strong>.</p>
-        </div>
-      </div>
-    `;
-    document.getElementById('stripe-info').style.display = 'none';
-    document.getElementById('pay-btn').textContent = 'Zamknij';
-    document.getElementById('pay-btn').onclick = () => closeModal(null, true);
-    document.getElementById('order-modal').classList.add('open');
-  }
-
   function closeModal(event, force) {
-    if (force || (event && event.target === document.getElementById('order-modal'))) {
+    if (force || (event && event.target===document.getElementById('order-modal'))) {
       document.getElementById('order-modal').classList.remove('open');
-      // Reset modal state
       setTimeout(() => {
         document.getElementById('modal-icon').innerHTML = '💳';
         document.getElementById('modal-title').textContent = 'Podsumowanie zamówienia';
         document.getElementById('modal-text').textContent = 'Sprawdź szczegóły i przejdź do płatności Stripe';
         document.getElementById('stripe-info').style.display = '';
-        document.getElementById('pay-btn').textContent = 'Zapłać teraz';
+        document.getElementById('pay-btn').innerHTML = '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg> Zapłać teraz';
         document.getElementById('pay-btn').onclick = initiateStripePayment;
+        document.getElementById('pay-btn').disabled = false;
       }, 400);
     }
   }
 
-  // Init
   updatePrice();
 </script>
 </body>
