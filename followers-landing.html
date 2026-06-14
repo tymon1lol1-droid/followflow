@@ -1,236 +1,152 @@
 <!DOCTYPE html>
 <html lang="pl" class="light">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>FollowFlow – Obserwujący na Instagram i TikTok</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://js.stripe.com/v3/"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --bg:#fafafa; --bg2:#fff; --hero-from:#fdf2f8; --hero-mid:#ede9fe; --hero-to:#e0f2fe;
-      --card-bg:#fff; --card-border:#e5e7eb; --card-border-hover:#c4b5fd;
-      --text-primary:#111827; --text-secondary:#6b7280; --text-muted:#9ca3af;
-      --input-bg:#f9fafb; --input-border:#e5e7eb;
-      --summary-bg:#f5f3ff; --summary-border:#ddd6fe;
-      --badge-bg:#f3f4f6; --badge-color:#6b7280;
-      --review-bg:#fff; --review-border:#f3f4f6;
-      --trust-bg:#fff; --trust-border:#f0e6ff;
-      --nav-bg:rgba(255,255,255,0.88); --nav-border:#f3f4f6;
-      --footer-border:#f3f4f6; --footer-text:#9ca3af;
-      --modal-bg:#fff; --modal-details-bg:#f9fafb;
-      --stripe-row-bg:#f9fafb; --stripe-row-border:#f3f4f6;
-      --glow-rose:rgba(244,63,94,0.18); --glow-violet:rgba(124,58,237,0.15);
-      --cursor-glow:rgba(124,58,237,0.12);
+    :root{
+      --bg:#fafafa;--bg2:#fff;--hero-from:#fdf2f8;--hero-mid:#ede9fe;--hero-to:#e0f2fe;
+      --card-bg:#fff;--card-border:#e5e7eb;--card-border-hover:#c4b5fd;
+      --text-primary:#111827;--text-secondary:#6b7280;--text-muted:#9ca3af;
+      --input-bg:#f9fafb;--input-border:#e5e7eb;
+      --summary-bg:#f5f3ff;--summary-border:#ddd6fe;
+      --badge-bg:#f3f4f6;--badge-color:#6b7280;
+      --review-bg:#fff;--review-border:#f3f4f6;
+      --trust-bg:#fff;--trust-border:#f0e6ff;
+      --nav-bg:rgba(255,255,255,0.92);--nav-border:#f3f4f6;
+      --footer-border:#f3f4f6;--footer-text:#9ca3af;
+      --modal-bg:#fff;--modal-details-bg:#f9fafb;
+      --stripe-row-bg:#f9fafb;--stripe-row-border:#f3f4f6;
+      --glow-rose:rgba(244,63,94,0.15);--glow-violet:rgba(124,58,237,0.12);
+      --faq-bg:#fff;--faq-border:#e5e7eb;
     }
-    html.dark {
-      --bg:#0a0a0f; --bg2:#0f0f17; --hero-from:#12001a; --hero-mid:#0d0520; --hero-to:#000d1a;
-      --card-bg:#15151f; --card-border:#2a2a3a; --card-border-hover:#7c3aed;
-      --text-primary:#f1f0ff; --text-secondary:#a0a0b8; --text-muted:#5a5a72;
-      --input-bg:#1c1c2a; --input-border:#2e2e42;
-      --summary-bg:#1a1030; --summary-border:#3b2d5e;
-      --badge-bg:#222236; --badge-color:#9090b0;
-      --review-bg:#15151f; --review-border:#222236;
-      --trust-bg:#15151f; --trust-border:#252535;
-      --nav-bg:rgba(10,10,15,0.92); --nav-border:#1e1e2e;
-      --footer-border:#1e1e2e; --footer-text:#5a5a72;
-      --modal-bg:#15151f; --modal-details-bg:#1c1c2a;
-      --stripe-row-bg:#1c1c2a; --stripe-row-border:#2a2a3a;
-      --glow-rose:rgba(244,63,94,0.08); --glow-violet:rgba(124,58,237,0.1);
-      --cursor-glow:rgba(124,58,237,0.08);
+    html.dark{
+      --bg:#0a0a0f;--bg2:#0f0f17;--hero-from:#12001a;--hero-mid:#0d0520;--hero-to:#000d1a;
+      --card-bg:#15151f;--card-border:#2a2a3a;--card-border-hover:#7c3aed;
+      --text-primary:#f1f0ff;--text-secondary:#a0a0b8;--text-muted:#5a5a72;
+      --input-bg:#1c1c2a;--input-border:#2e2e42;
+      --summary-bg:#1a1030;--summary-border:#3b2d5e;
+      --badge-bg:#222236;--badge-color:#9090b0;
+      --review-bg:#15151f;--review-border:#222236;
+      --trust-bg:#15151f;--trust-border:#252535;
+      --nav-bg:rgba(10,10,15,0.95);--nav-border:#1e1e2e;
+      --footer-border:#1e1e2e;--footer-text:#5a5a72;
+      --modal-bg:#15151f;--modal-details-bg:#1c1c2a;
+      --stripe-row-bg:#1c1c2a;--stripe-row-border:#2a2a3a;
+      --glow-rose:rgba(244,63,94,0.07);--glow-violet:rgba(124,58,237,0.08);
+      --faq-bg:#15151f;--faq-border:#2a2a3a;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);transition:background .3s,color .3s;overflow-x:hidden}
     h1,h2,h3,.font-display{font-family:'Syne',sans-serif}
 
-    /* ===== CURSOR GLOW ===== */
-    #cursor-glow{
-      pointer-events:none;position:fixed;width:400px;height:400px;border-radius:50%;
-      background:radial-gradient(circle,var(--cursor-glow) 0%,transparent 70%);
-      transform:translate(-50%,-50%);transition:opacity .3s;z-index:0;opacity:0;
-    }
+    /* CURSOR GLOW */
+    #cursor-glow{pointer-events:none;position:fixed;width:500px;height:500px;border-radius:50%;
+      background:radial-gradient(circle,rgba(124,58,237,0.08) 0%,transparent 70%);
+      transform:translate(-50%,-50%);transition:opacity .4s,left .05s,top .05s;z-index:0;opacity:0}
 
-    /* ===== HERO ===== */
-    .hero-bg{
-      background:linear-gradient(135deg,var(--hero-from) 0%,var(--hero-mid) 40%,var(--hero-to) 100%);
-      position:relative;overflow:hidden;
-    }
-    .hero-blob{
-      position:absolute;border-radius:50%;pointer-events:none;filter:blur(60px);
-      animation:blobFloat 8s ease-in-out infinite;
-    }
+    /* HERO */
+    .hero-bg{background:linear-gradient(135deg,var(--hero-from) 0%,var(--hero-mid) 40%,var(--hero-to) 100%);position:relative;overflow:hidden}
+    .hero-blob{position:absolute;border-radius:50%;pointer-events:none;filter:blur(60px);animation:blobFloat 8s ease-in-out infinite}
     .hero-blob-1{width:500px;height:500px;background:var(--glow-rose);top:-100px;right:-100px}
     .hero-blob-2{width:400px;height:400px;background:var(--glow-violet);bottom:-80px;left:-80px;animation-delay:-4s}
-    @keyframes blobFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+    @keyframes blobFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-28px) scale(1.04)}}
 
-    /* ===== PARTICLES ===== */
-    .particle{
-      position:absolute;border-radius:50%;pointer-events:none;
-      animation:particleFloat linear infinite;opacity:0;
-    }
-    @keyframes particleFloat{
-      0%{transform:translateY(100vh) scale(0);opacity:0}
-      10%{opacity:.6}
-      90%{opacity:.3}
-      100%{transform:translateY(-100px) scale(1);opacity:0}
-    }
+    /* PARTICLES */
+    .particle{position:absolute;border-radius:50%;pointer-events:none;animation:particleFloat linear infinite;opacity:0}
+    @keyframes particleFloat{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:.5}90%{opacity:.2}100%{transform:translateY(-100px) scale(1);opacity:0}}
 
-    /* ===== NAV ===== */
+    /* NAV */
     .nav-wrap{background:var(--nav-bg);border-bottom:1px solid var(--nav-border);backdrop-filter:blur(20px)}
 
-    /* ===== PLATFORM BTNS ===== */
-    .platform-btn{
-      transition:all .3s cubic-bezier(.4,0,.2,1);cursor:pointer;border:2px solid transparent;
-      position:relative;overflow:hidden;
-    }
-    .platform-btn::after{
-      content:'';position:absolute;inset:0;background:rgba(255,255,255,0);
-      transition:background .2s;
-    }
+    /* PLATFORM BTNS */
+    .platform-btn{transition:all .3s cubic-bezier(.4,0,.2,1);cursor:pointer;border:2px solid transparent;position:relative;overflow:hidden}
+    .platform-btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background .2s}
     .platform-btn:hover::after{background:rgba(255,255,255,0.08)}
-    .platform-btn.active-ig{
-      background:linear-gradient(135deg,#f43f5e,#c026d3,#7c3aed);
-      color:#fff;box-shadow:0 8px 32px rgba(244,63,94,0.35);
-    }
-    .platform-btn.active-tt{
-      background:linear-gradient(135deg,#09090b,#1a1a2e);
-      color:#fff;border-color:#38bdf8;box-shadow:0 8px 32px rgba(56,189,248,0.3);
-    }
-    .platform-btn:not(.active-ig):not(.active-tt){
-      background:var(--card-bg);color:var(--text-secondary);border-color:var(--card-border);
-    }
-    .platform-btn:not(.active-ig):not(.active-tt):hover{
-      border-color:#c4b5fd;color:#7c3aed;background:var(--input-bg);transform:translateY(-1px);
-    }
+    .platform-btn.active-ig{background:linear-gradient(135deg,#f43f5e,#c026d3,#7c3aed);color:#fff;box-shadow:0 8px 32px rgba(244,63,94,0.35)}
+    .platform-btn.active-tt{background:linear-gradient(135deg,#09090b,#1a1a2e);color:#fff;border-color:#38bdf8;box-shadow:0 8px 32px rgba(56,189,248,0.3)}
+    .platform-btn:not(.active-ig):not(.active-tt){background:var(--card-bg);color:var(--text-secondary);border-color:var(--card-border)}
+    .platform-btn:not(.active-ig):not(.active-tt):hover{border-color:#c4b5fd;color:#7c3aed;background:var(--input-bg);transform:translateY(-1px)}
 
-    /* ===== PKG CARDS ===== */
-    .pkg-card{
-      transition:all .3s cubic-bezier(.4,0,.2,1);cursor:pointer;
-      border:2px solid var(--card-border);background:var(--card-bg);
-      position:relative;overflow:hidden;
-    }
-    .pkg-card::before{
-      content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;
-      background:radial-gradient(circle at 50% 0%,rgba(124,58,237,0.08),transparent 70%);
-    }
+    /* PKG CARDS */
+    .pkg-card{transition:all .3s cubic-bezier(.4,0,.2,1);cursor:pointer;border:2px solid var(--card-border);background:var(--card-bg);position:relative;overflow:hidden}
+    .pkg-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;background:radial-gradient(circle at 50% 0%,rgba(124,58,237,0.08),transparent 70%)}
     .pkg-card:hover::before{opacity:1}
-    .pkg-card:hover{border-color:var(--card-border-hover);transform:translateY(-4px);box-shadow:0 20px 40px rgba(124,58,237,0.15)}
+    .pkg-card:hover{border-color:var(--card-border-hover);transform:translateY(-5px) scale(1.01);box-shadow:0 24px 48px rgba(124,58,237,0.18)}
     .pkg-card.selected{border-color:#7c3aed;box-shadow:0 16px 48px rgba(124,58,237,0.25)}
     .pkg-card.selected::before{opacity:1}
     .pkg-card.selected .pkg-badge{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff}
     .pkg-badge{transition:all .25s;background:var(--badge-bg);color:var(--badge-color)}
 
-    /* ===== SLIDER ===== */
-    input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:9999px;outline:none;cursor:pointer}
-    input[type=range]::-webkit-slider-thumb{
-      -webkit-appearance:none;appearance:none;width:24px;height:24px;border-radius:50%;
-      background:linear-gradient(135deg,#7c3aed,#a855f7);
-      cursor:pointer;box-shadow:0 2px 12px rgba(124,58,237,0.5);border:3px solid var(--card-bg);
-      transition:transform .15s;
-    }
-    input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
-    input[type=range]::-moz-range-thumb{
-      width:24px;height:24px;border-radius:50%;
-      background:linear-gradient(135deg,#7c3aed,#a855f7);
-      cursor:pointer;box-shadow:0 2px 12px rgba(124,58,237,0.5);border:3px solid var(--card-bg);
-    }
+    /* SLIDER */
+    input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:9999px;outline:none;cursor:pointer;transition:background .15s ease}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a855f7);cursor:pointer;box-shadow:0 2px 12px rgba(124,58,237,0.5);border:3px solid var(--card-bg);transition:transform .15s}
+    input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3);box-shadow:0 0 0 6px rgba(124,58,237,0.2),0 2px 12px rgba(124,58,237,0.5)}
+    input[type=range]:active::-webkit-slider-thumb{transform:scale(1.4);box-shadow:0 0 0 10px rgba(124,58,237,0.15),0 2px 16px rgba(124,58,237,0.6)}
+    input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a855f7);cursor:pointer;box-shadow:0 2px 12px rgba(124,58,237,0.5);border:3px solid var(--card-bg)}
     .slider-ig{background:linear-gradient(to right,#f43f5e,#c026d3)}
     .slider-tt{background:linear-gradient(to right,#38bdf8,#0ea5e9)}
 
-    /* ===== CTA ===== */
-    .cta-btn{
-      transition:all .25s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden;
-      cursor:pointer;border:none;
-    }
-    .cta-btn::before{
-      content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;
-      background:rgba(255,255,255,0.2);transform:translate(-50%,-50%);
-      transition:width .5s,height .5s;
-    }
-    .cta-btn:hover::before{width:400px;height:400px}
-    .cta-btn:hover{transform:translateY(-3px);box-shadow:0 20px 48px rgba(124,58,237,0.4) !important}
+    /* CTA */
+    .cta-btn{transition:all .25s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden;cursor:pointer;border:none}
+    .cta-btn::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(255,255,255,0.2);transform:translate(-50%,-50%);transition:width .6s,height .6s}
+    .cta-btn:hover::before{width:500px;height:500px}
+    .cta-btn:hover{transform:translateY(-3px);box-shadow:0 24px 56px rgba(124,58,237,0.45) !important}
     .cta-btn:active{transform:translateY(-1px) scale(0.99)}
     .cta-btn-ig{background:linear-gradient(135deg,#f43f5e,#c026d3,#7c3aed)}
     .cta-btn-tt{background:linear-gradient(135deg,#09090b 0%,#1a1a2e 50%,#0ea5e9 100%)}
 
-    /* ===== PRICE ANIM ===== */
+    /* PRICE ANIM */
     .price-val{transition:all .2s}
     .price-bounce{animation:pricePop .35s cubic-bezier(.34,1.56,.64,1)}
-    @keyframes pricePop{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+    @keyframes pricePop{0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)}}
 
-    /* ===== TRUST CARDS ===== */
-    .trust-item{
-      background:var(--trust-bg);border:1px solid var(--trust-border);
-      transition:all .3s;cursor:default;
-    }
-    .trust-item:hover{
-      border-color:#c4b5fd;transform:translateY(-3px);
-      box-shadow:0 12px 32px rgba(124,58,237,0.12);
-    }
-    .trust-icon{
-      transition:transform .3s cubic-bezier(.34,1.56,.64,1);
-    }
-    .trust-item:hover .trust-icon{transform:scale(1.2) rotate(5deg)}
+    /* TRUST */
+    .trust-item{background:var(--trust-bg);border:1px solid var(--trust-border);transition:all .3s;cursor:default}
+    .trust-item:hover{border-color:#c4b5fd;transform:translateY(-4px);box-shadow:0 16px 40px rgba(124,58,237,0.14)}
+    .trust-icon{transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+    .trust-item:hover .trust-icon{transform:scale(1.25) rotate(8deg)}
 
-    /* ===== QTY PILLS ===== */
-    .qty-pill{
-      cursor:pointer;transition:all .2s;
-      border:1px solid var(--card-border);
-      font-size:.82rem;font-weight:500;
-      color:var(--text-secondary);background:var(--card-bg);
-    }
+    /* QTY PILLS */
+    .qty-pill{cursor:pointer;transition:all .2s;border:1px solid var(--card-border);font-size:.82rem;font-weight:500;color:var(--text-secondary);background:var(--card-bg)}
     .qty-pill:hover{border-color:#a855f7;color:#7c3aed;background:var(--input-bg);transform:translateY(-1px)}
-    .qty-pill.active{background:#7c3aed;color:#fff;border-color:#7c3aed;box-shadow:0 4px 12px rgba(124,58,237,0.3)}
+    .qty-pill.active{background:#7c3aed;color:#fff;border-color:#7c3aed;box-shadow:0 4px 14px rgba(124,58,237,0.35)}
 
     .stars-row{color:#f59e0b;letter-spacing:-1px}
 
-    /* ===== FADE IN ===== */
+    /* FADE IN */
     .fade-up{opacity:0;transform:translateY(28px);animation:fadeUp .7s cubic-bezier(.4,0,.2,1) forwards}
     @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
-    .delay-1{animation-delay:.1s}.delay-2{animation-delay:.2s}
-    .delay-3{animation-delay:.3s}.delay-4{animation-delay:.45s}
+    .delay-1{animation-delay:.1s}.delay-2{animation-delay:.2s}.delay-3{animation-delay:.3s}.delay-4{animation-delay:.45s}
 
-    /* ===== MODAL ===== */
-    .modal-overlay{
-      display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;
-      align-items:center;justify-content:center;backdrop-filter:blur(8px);
-    }
+    /* MODAL */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(10px)}
     .modal-overlay.open{display:flex}
     .modal-card{animation:modalIn .4s cubic-bezier(.34,1.56,.64,1)}
     @keyframes modalIn{from{transform:scale(0.8) translateY(30px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
 
-    /* ===== DARK TOGGLE ===== */
-    .theme-toggle{
-      width:44px;height:24px;border-radius:9999px;
-      background:#e5e7eb;position:relative;cursor:pointer;
-      transition:background .3s;border:none;outline:none;flex-shrink:0;
-    }
+    /* DARK TOGGLE */
+    .theme-toggle{width:44px;height:24px;border-radius:9999px;background:#e5e7eb;position:relative;cursor:pointer;transition:background .3s;border:none;outline:none;flex-shrink:0}
     html.dark .theme-toggle{background:#7c3aed}
-    .theme-toggle::after{
-      content:'';position:absolute;top:3px;left:3px;
-      width:18px;height:18px;border-radius:50%;
-      background:#fff;transition:transform .3s;
-      box-shadow:0 1px 4px rgba(0,0,0,0.2);
-    }
+    .theme-toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .3s;box-shadow:0 1px 4px rgba(0,0,0,0.2)}
     html.dark .theme-toggle::after{transform:translateX(20px)}
 
-    /* ===== STRIPE ===== */
-    .stripe-method{
-      display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;
-      background:var(--stripe-row-bg);border:1px solid var(--stripe-row-border);
-      cursor:pointer;transition:all .2s;
-    }
-    .stripe-method:hover{border-color:#7c3aed;transform:translateX(3px)}
+    /* STRIPE */
+    .stripe-method{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:var(--stripe-row-bg);border:1px solid var(--stripe-row-border);cursor:pointer;transition:all .2s}
+    .stripe-method:hover{border-color:#7c3aed;transform:translateX(4px)}
     .stripe-method.selected-method{border-color:#7c3aed;background:var(--summary-bg)}
     .stripe-method input[type=radio]{accent-color:#7c3aed}
 
-    /* ===== SHARED ===== */
+    /* SHARED */
     .config-card{background:var(--card-bg);border:1px solid var(--card-border)}
     .review-card{background:var(--review-bg);border:1px solid var(--review-border);transition:all .25s}
-    .review-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.07);border-color:#c4b5fd}
-    .input-field{background:var(--input-bg);border:1px solid var(--input-border);color:var(--text-primary);transition:all .2s}
+    .review-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(124,58,237,0.1);border-color:#c4b5fd}
+    .input-field{background:var(--input-bg);border:1px solid var(--input-border);color:var(--text-primary);transition:all .25s}
     .input-field::placeholder{color:var(--text-muted)}
     .input-field:focus{outline:none;box-shadow:0 0 0 3px rgba(124,58,237,0.2);border-color:#7c3aed;background:var(--card-bg)}
     .summary-box{background:var(--summary-bg);border:1px solid var(--summary-border)}
@@ -238,90 +154,77 @@
     .muted-text{color:var(--text-secondary)}
     .primary-text{color:var(--text-primary)}
 
-    /* ===== REVIEWS GRID ===== */
+    /* REVIEWS */
     .reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     @media(max-width:540px){.reviews-grid{grid-template-columns:1fr}}
 
-    /* ===== COUNTER TICKER ===== */
-    .counter-wrap{
-      display:inline-flex;align-items:center;gap:8px;
-      background:var(--card-bg);border:1px solid var(--card-border);
-      border-radius:9999px;padding:6px 16px;
-    }
-    .live-dot{
-      width:8px;height:8px;border-radius:50%;background:#22c55e;
-      box-shadow:0 0 0 0 rgba(34,197,94,.6);
-      animation:livePulse 1.5s infinite;
-    }
-    @keyframes livePulse{
-      0%{box-shadow:0 0 0 0 rgba(34,197,94,.6)}
-      70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}
-      100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}
-    }
+    /* COUNTER */
+    .counter-wrap{display:inline-flex;align-items:center;gap:8px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:9999px;padding:6px 16px}
+    .live-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 0 rgba(34,197,94,.6);animation:livePulse 1.5s infinite}
+    @keyframes livePulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.6)}70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
 
-    /* ===== MARQUEE ===== */
+    /* MARQUEE */
     .marquee-wrap{overflow:hidden;white-space:nowrap;position:relative}
-    .marquee-wrap::before,.marquee-wrap::after{
-      content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;
-    }
+    .marquee-wrap::before,.marquee-wrap::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2}
     .marquee-wrap::before{left:0;background:linear-gradient(to right,var(--bg),transparent)}
     .marquee-wrap::after{right:0;background:linear-gradient(to left,var(--bg),transparent)}
-    .marquee-track{display:inline-flex;gap:32px;animation:marquee 20s linear infinite}
+    .marquee-track{display:inline-flex;gap:32px;animation:marquee 22s linear infinite}
     @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-    .marquee-item{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 18px;border-radius:9999px;
-      border:1px solid var(--card-border);background:var(--card-bg);
-      font-size:.8rem;font-weight:500;color:var(--text-secondary);
-      flex-shrink:0;
-    }
+    .marquee-item{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:9999px;border:1px solid var(--card-border);background:var(--card-bg);font-size:.8rem;font-weight:500;color:var(--text-secondary);flex-shrink:0}
 
-    /* ===== STATS ROW ===== */
-    .stat-card{
-      background:var(--card-bg);border:1px solid var(--card-border);
-      border-radius:20px;padding:20px;text-align:center;
-      transition:all .3s;
-    }
-    .stat-card:hover{border-color:#c4b5fd;transform:translateY(-2px);box-shadow:0 12px 28px rgba(124,58,237,0.1)}
-    .stat-num{
-      font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;
-      background:linear-gradient(135deg,#7c3aed,#f43f5e);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-    }
+    /* STATS */
+    .stat-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:20px;text-align:center;transition:all .3s}
+    .stat-card:hover{border-color:#c4b5fd;transform:translateY(-3px);box-shadow:0 16px 36px rgba(124,58,237,0.12)}
+    .stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;background:linear-gradient(135deg,#7c3aed,#f43f5e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
-    /* ===== SCROLL REVEAL ===== */
-    .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s}
+    /* SCROLL REVEAL */
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity .65s cubic-bezier(.4,0,.2,1),transform .65s cubic-bezier(.4,0,.2,1)}
     .reveal.visible{opacity:1;transform:translateY(0)}
+    .reveal-delay-1{transition-delay:.1s}
+    .reveal-delay-2{transition-delay:.2s}
+    .reveal-delay-3{transition-delay:.3s}
 
-    /* ===== SHIMMER on PKG selected ===== */
-    @keyframes shimmer{
-      0%{background-position:-200% center}
-      100%{background-position:200% center}
-    }
-    .pkg-card.selected .pkg-shimmer{
-      position:absolute;inset:0;pointer-events:none;
-      background:linear-gradient(90deg,transparent,rgba(124,58,237,0.06),transparent);
-      background-size:200%;
-      animation:shimmer 2s infinite;
-    }
+    /* SHIMMER */
+    @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+    .pkg-card.selected .pkg-shimmer{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(124,58,237,0.07),transparent);background-size:200%;animation:shimmer 2.5s infinite}
 
-    /* ===== INPUT FOCUS GLOW ===== */
-    @keyframes inputGlow{
-      0%,100%{box-shadow:0 0 0 3px rgba(124,58,237,0.15)}
-      50%{box-shadow:0 0 0 4px rgba(124,58,237,0.3)}
-    }
+    /* INPUT GLOW */
+    @keyframes inputGlow{0%,100%{box-shadow:0 0 0 3px rgba(124,58,237,0.15)}50%{box-shadow:0 0 0 4px rgba(124,58,237,0.3)}}
     .input-field:focus{animation:inputGlow 2s infinite}
 
-    /* ===== TILT CARD ===== */
-    .tilt{transform-style:preserve-3d;transition:transform .15s}
+    /* FAQ */
+    .faq-item{background:var(--faq-bg);border:1px solid var(--faq-border);transition:all .3s;cursor:pointer}
+    .faq-item:hover{border-color:#c4b5fd;box-shadow:0 8px 24px rgba(124,58,237,0.1)}
+    .faq-item.open{border-color:#7c3aed;box-shadow:0 8px 32px rgba(124,58,237,0.15)}
+    .faq-answer{max-height:0;overflow:hidden;opacity:0;transition:max-height .45s cubic-bezier(.4,0,.2,1),opacity .35s ease}
+    .faq-item.open .faq-answer{max-height:300px;opacity:1}
+    .faq-icon{transition:transform .35s cubic-bezier(.34,1.56,.64,1);width:22px;height:22px;flex-shrink:0}
+    .faq-item.open .faq-icon{transform:rotate(45deg)}
+    .faq-icon-circle{background:var(--badge-bg);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .3s}
+    .faq-item.open .faq-icon-circle{background:linear-gradient(135deg,#7c3aed,#a855f7)}
+    .faq-item.open .faq-icon{color:#fff}
+
+    /* GRADIENT TEXT ANIM */
+    .grad-text{background:linear-gradient(90deg,#f43f5e,#c026d3,#7c3aed,#38bdf8,#f43f5e);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradMove 5s linear infinite}
+    @keyframes gradMove{0%{background-position:0%}100%{background-position:300%}}
+
+    /* PLATFORM PRICE BADGE */
+    .price-badge{display:inline-flex;align-items:center;gap:4px;font-size:.7rem;font-weight:600;padding:2px 8px;border-radius:9999px;margin-left:4px}
+    .price-badge-tt{background:linear-gradient(135deg,#09090b,#0ea5e9);color:#fff}
+    .price-badge-ig{background:linear-gradient(135deg,#f43f5e,#7c3aed);color:#fff}
+
+    /* BUTTON RIPPLE */
+    .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,0.4);transform:scale(0);animation:rippleAnim .6s linear;pointer-events:none}
+    @keyframes rippleAnim{to{transform:scale(4);opacity:0}}
+
+    /* SECTION DIVIDER */
+    .section-divider{width:48px;height:3px;border-radius:9999px;background:linear-gradient(90deg,#7c3aed,#f43f5e);margin:0 auto 16px}
   </style>
 </head>
 <body>
-
-<!-- Cursor glow -->
 <div id="cursor-glow"></div>
 
-<!-- ============ NAVBAR ============ -->
+<!-- NAVBAR -->
 <nav class="sticky top-0 z-50 nav-wrap shadow-sm">
   <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
     <div class="flex items-center gap-2">
@@ -339,107 +242,73 @@
         <span class="text-xs muted-text hidden sm:block" id="theme-label">☀️</span>
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="Zmień motyw"></button>
       </div>
-      <a href="#konfigurator" class="text-sm font-medium px-4 py-2 rounded-xl transition-all hover:opacity-90 hover:scale-105" style="background:var(--summary-bg);color:#7c3aed;transform-origin:center">Zamów →</a>
+      <a href="#konfigurator" class="text-sm font-medium px-4 py-2 rounded-xl transition-all hover:opacity-90 hover:scale-105" style="background:var(--summary-bg);color:#7c3aed">Zamów →</a>
     </div>
   </div>
 </nav>
 
-<!-- ============ HERO ============ -->
+<!-- HERO -->
 <section class="hero-bg px-4 pt-16 pb-14 md:pt-24 md:pb-20" style="position:relative">
   <div class="hero-blob hero-blob-1"></div>
   <div class="hero-blob hero-blob-2"></div>
   <div id="particles-container" style="position:absolute;inset:0;pointer-events:none;overflow:hidden"></div>
-
   <div class="max-w-2xl mx-auto text-center relative z-10">
-
-    <!-- Live counter badge -->
     <div class="fade-up flex justify-center mb-6">
       <div class="counter-wrap">
         <span class="live-dot"></span>
         <span class="text-xs font-semibold primary-text"><span id="live-counter">14 287</span> zamówień w tym miesiącu</span>
       </div>
     </div>
-
     <h1 class="fade-up delay-1 font-display text-4xl md:text-6xl font-extrabold leading-tight tracking-tight mb-5 primary-text">
       Zwiększ swoje zasięgi<br/>
-      <span id="hero-gradient" class="bg-gradient-to-r from-rose-500 via-fuchsia-500 to-violet-600 bg-clip-text text-transparent" style="background-size:200%;animation:shimmer 3s infinite linear;display:inline-block">w kilka sekund</span>
+      <span class="grad-text">w kilka sekund</span>
     </h1>
-
     <p class="fade-up delay-2 muted-text text-lg md:text-xl max-w-lg mx-auto mb-8 font-light">
       Obserwujący na Instagram i TikTok – dostawa do 1 dnia roboczego, bez hasła, bezpieczne płatności Stripe.
     </p>
-
-    <!-- Platform Toggle -->
     <div class="fade-up delay-3 flex justify-center gap-3 mb-6">
-      <button id="btn-ig" onclick="setPlatform('ig')"
-        class="platform-btn active-ig flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-display font-semibold text-sm">
+      <button id="btn-ig" onclick="setPlatform('ig')" class="platform-btn active-ig flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-display font-semibold text-sm">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
         Instagram
       </button>
-      <button id="btn-tt" onclick="setPlatform('tt')"
-        class="platform-btn flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-display font-semibold text-sm">
+      <button id="btn-tt" onclick="setPlatform('tt')" class="platform-btn flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-display font-semibold text-sm">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>
         TikTok
       </button>
     </div>
-
     <div class="fade-up delay-4 flex flex-wrap justify-center gap-3 text-sm muted-text">
-      <span class="flex items-center gap-1.5 bg-white/60 dark:bg-white/5 px-3 py-1.5 rounded-full border border-white/40 backdrop-blur-sm" style="border-color:var(--card-border)">
-        <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Bez hasła
-      </span>
-      <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border backdrop-blur-sm" style="border-color:var(--card-border);background:var(--card-bg)">
-        <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Do 1 dnia roboczego
-      </span>
-      <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border backdrop-blur-sm" style="border-color:var(--card-border);background:var(--card-bg)">
-        <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Płatność Stripe
-      </span>
+      <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border backdrop-blur-sm" style="border-color:var(--card-border);background:var(--card-bg)"><svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Bez hasła</span>
+      <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border backdrop-blur-sm" style="border-color:var(--card-border);background:var(--card-bg)"><svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Do 1 dnia roboczego</span>
+      <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border backdrop-blur-sm" style="border-color:var(--card-border);background:var(--card-bg)"><svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Płatność Stripe</span>
     </div>
   </div>
 </section>
 
-<!-- ============ MARQUEE ============ -->
+<!-- MARQUEE -->
 <div class="marquee-wrap py-4 border-t border-b" style="border-color:var(--card-border)">
   <div class="marquee-track">
-    <span class="marquee-item">⚡ Ekspresowa realizacja</span>
-    <span class="marquee-item">🔒 SSL 256-bit</span>
-    <span class="marquee-item">📱 Instagram & TikTok</span>
-    <span class="marquee-item">💳 Stripe · BLIK · P24</span>
-    <span class="marquee-item">✅ Bez hasła do konta</span>
-    <span class="marquee-item">🌍 Polska obsługa</span>
-    <span class="marquee-item">📈 +14 000 zamówień</span>
-    <span class="marquee-item">⚡ Ekspresowa realizacja</span>
-    <span class="marquee-item">🔒 SSL 256-bit</span>
-    <span class="marquee-item">📱 Instagram & TikTok</span>
-    <span class="marquee-item">💳 Stripe · BLIK · P24</span>
-    <span class="marquee-item">✅ Bez hasła do konta</span>
-    <span class="marquee-item">🌍 Polska obsługa</span>
-    <span class="marquee-item">📈 +14 000 zamówień</span>
+    <span class="marquee-item">⚡ Ekspresowa realizacja</span><span class="marquee-item">🔒 SSL 256-bit</span><span class="marquee-item">📱 Instagram & TikTok</span><span class="marquee-item">💳 Stripe · BLIK · P24</span><span class="marquee-item">✅ Bez hasła do konta</span><span class="marquee-item">🌍 Polska obsługa</span><span class="marquee-item">📈 +14 000 zamówień</span>
+    <span class="marquee-item">⚡ Ekspresowa realizacja</span><span class="marquee-item">🔒 SSL 256-bit</span><span class="marquee-item">📱 Instagram & TikTok</span><span class="marquee-item">💳 Stripe · BLIK · P24</span><span class="marquee-item">✅ Bez hasła do konta</span><span class="marquee-item">🌍 Polska obsługa</span><span class="marquee-item">📈 +14 000 zamówień</span>
   </div>
 </div>
 
-<!-- ============ STATS ============ -->
-<section class="py-10 px-4 max-w-2xl mx-auto reveal">
+<!-- STATS -->
+<section class="py-10 px-4 max-w-2xl mx-auto">
   <div class="grid grid-cols-3 gap-4">
-    <div class="stat-card">
-      <div class="stat-num" id="stat-orders">14k+</div>
-      <p class="text-xs muted-text mt-1">Zamówień</p>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">4,97</div>
-      <p class="text-xs muted-text mt-1">Średnia ocena</p>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">&lt;24h</div>
-      <p class="text-xs muted-text mt-1">Czas dostawy</p>
-    </div>
+    <div class="stat-card"><div class="stat-num" id="stat-1">14k+</div><p class="text-xs muted-text mt-1">Zamówień</p></div>
+    <div class="stat-card"><div class="stat-num" id="stat-2">4,97</div><p class="text-xs muted-text mt-1">Średnia ocena</p></div>
+    <div class="stat-card"><div class="stat-num">&lt;24h</div><p class="text-xs muted-text mt-1">Czas dostawy</p></div>
   </div>
 </section>
 
-<!-- ============ KONFIGURATOR ============ -->
+<!-- KONFIGURATOR -->
 <section id="konfigurator" class="py-6 px-4">
   <div class="max-w-2xl mx-auto">
-    <div class="config-card rounded-3xl shadow-2xl overflow-hidden reveal" style="box-shadow:0 24px 64px rgba(124,58,237,0.12)">
-
+    <div class="text-center mb-6">
+      <div class="section-divider"></div>
+      <h2 class="font-display font-extrabold text-2xl primary-text">Skonfiguruj zamówienie</h2>
+    </div>
+    <div class="config-card rounded-3xl shadow-2xl overflow-hidden" style="box-shadow:0 24px 64px rgba(124,58,237,0.14)">
       <!-- Header -->
       <div class="px-6 pt-6 pb-5 border-b" style="border-color:var(--card-border);background:linear-gradient(135deg,var(--summary-bg),var(--card-bg))">
         <div class="flex items-center gap-3">
@@ -450,57 +319,95 @@
             <p class="text-xs section-label font-semibold uppercase tracking-widest">Konfigurator zamówienia</p>
             <p id="platform-label" class="font-display font-bold primary-text text-lg">Instagram – Obserwujący</p>
           </div>
-          <div class="ml-auto hidden sm:flex items-center gap-1 text-xs muted-text">
-            <span class="live-dot" style="width:6px;height:6px"></span>
-            Online
+          <div class="ml-auto hidden sm:flex items-center gap-1.5 text-xs muted-text">
+            <span class="live-dot" style="width:6px;height:6px"></span>Online
           </div>
         </div>
       </div>
-
       <div class="px-6 py-6 space-y-7">
-
         <!-- Step 1 -->
         <div>
           <label class="block text-xs font-semibold section-label uppercase tracking-widest mb-2">1. Link lub nazwa profilu</label>
           <div class="relative">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 muted-text font-semibold select-none text-sm">@</span>
-            <input id="username-input" type="text" placeholder="twoja_nazwa_profilu"
-              class="input-field w-full pl-9 pr-4 py-4 rounded-2xl text-sm" />
-            <div id="input-checkmark" class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 transition-opacity">
+            <input id="username-input" type="text" placeholder="twoja_nazwa_profilu" class="input-field w-full pl-9 pr-12 py-4 rounded-2xl text-sm"/>
+            <div id="input-checkmark" class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 transition-all duration-300">
               <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
             </div>
           </div>
         </div>
-
         <!-- Step 2 -->
         <div>
           <label class="block text-xs font-semibold section-label uppercase tracking-widest mb-3">2. Wybierz pakiet</label>
+          <div id="pkg-prices-note" class="mb-3 text-xs muted-text flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-violet-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+            <span id="pkg-note-text">Ceny Instagram za 1000 obserwujących</span>
+          </div>
           <div class="grid grid-cols-3 gap-3">
-            <div class="pkg-card selected rounded-2xl p-4 text-center" onclick="selectPackage('basic', this)">
+            <div class="pkg-card selected rounded-2xl p-4 text-center" onclick="selectPackage('basic',this)">
               <div class="pkg-shimmer rounded-2xl"></div>
               <div class="pkg-badge rounded-xl px-2 py-0.5 text-xs font-semibold mb-2 inline-block">Basic</div>
-              <div class="text-2xl mb-1.5" style="transition:transform .3s" onmouseenter="this.style.transform='scale(1.3) rotate(-5deg)'" onmouseleave="this.style.transform='scale(1)'">🪴</div>
+              <div class="text-2xl mb-1.5" style="transition:transform .3s" onmouseenter="this.style.transform='scale(1.35) rotate(-6deg)'" onmouseleave="this.style.transform='scale(1)'">🪴</div>
               <p class="primary-text font-display font-bold text-sm leading-tight">Najtańsze<br/>konta</p>
-              <p class="mt-2 text-violet-500 font-bold text-sm">8,99 zł<span class="muted-text font-normal text-xs"> /1k</span></p>
+              <p id="price-basic" class="mt-2 text-violet-500 font-bold text-sm">8,99 zł<span class="muted-text font-normal text-xs"> /1k</span></p>
             </div>
-            <div class="pkg-card rounded-2xl p-4 text-center relative" onclick="selectPackage('premium', this)">
+            <div class="pkg-card rounded-2xl p-4 text-center relative" onclick="selectPackage('premium',this)">
               <div class="pkg-shimmer rounded-2xl"></div>
-              <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-orange-400 text-white text-xs font-bold px-3 py-0.5 rounded-full shadow whitespace-nowrap" style="animation:blobFloat 3s ease-in-out infinite">Popularny</div>
+              <div class="absolute top-2 right-2 bg-gradient-to-r from-amber-400 to-orange-400 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow" style="animation:blobFloat 3s ease-in-out infinite">🔥 Popularny</div>
               <div class="pkg-badge rounded-xl px-2 py-0.5 text-xs font-semibold mb-2 inline-block">Premium</div>
-              <div class="text-2xl mb-1.5" style="transition:transform .3s" onmouseenter="this.style.transform='scale(1.3) rotate(5deg)'" onmouseleave="this.style.transform='scale(1)'">⭐</div>
+              <div class="text-2xl mb-1.5" style="transition:transform .3s" onmouseenter="this.style.transform='scale(1.35) rotate(6deg)'" onmouseleave="this.style.transform='scale(1)'">⭐</div>
               <p class="primary-text font-display font-bold text-sm leading-tight">Starsze konta<br/>wysoka jakość</p>
-              <p class="mt-2 text-violet-500 font-bold text-sm">12,99 zł<span class="muted-text font-normal text-xs"> /1k</span></p>
+              <p id="price-premium" class="mt-2 text-violet-500 font-bold text-sm">12,99 zł<span class="muted-text font-normal text-xs"> /1k</span></p>
             </div>
-            <div class="pkg-card rounded-2xl p-4 text-center" onclick="selectPackage('real', this)">
+            <div class="pkg-card rounded-2xl p-4 text-center" onclick="selectPackage('real',this)">
               <div class="pkg-shimmer rounded-2xl"></div>
               <div class="pkg-badge rounded-xl px-2 py-0.5 text-xs font-semibold mb-2 inline-block">Real</div>
-              <div class="text-2xl mb-1.5" style="transition:transform .3s" onmouseenter="this.style.transform='scale(1.3) rotate(-5deg)'" onmouseleave="this.style.transform='scale(1)'">🔥</div>
+              <div class="text-2xl mb-1.5" style="transition:transform .3s" onmouseenter="this.style.transform='scale(1.35) rotate(-6deg)'" onmouseleave="this.style.transform='scale(1)'">🔥</div>
               <p class="primary-text font-display font-bold text-sm leading-tight">Prawdziwe<br/>aktywne konta</p>
-              <p class="mt-2 text-violet-500 font-bold text-sm">14,99 zł<span class="muted-text font-normal text-xs"> /1k</span></p>
+              <p id="price-real" class="mt-2 text-violet-500 font-bold text-sm">16,99 zł<span class="muted-text font-normal text-xs"> /1k</span></p>
             </div>
           </div>
         </div>
 
+        <!-- REFILL INSURANCE (IG only, premium/real) -->
+        <div id="refill-section" class="refill-wrap">
+          <div style="background:linear-gradient(135deg,rgba(124,58,237,0.07),rgba(244,63,94,0.04));border:1.5px solid var(--summary-border);border-radius:18px;padding:18px">
+            <div class="flex items-center gap-2 mb-3">
+              <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#a855f7);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">🛡️</div>
+              <div>
+                <p class="font-display font-bold primary-text text-sm">Ubezpieczenie Refill</p>
+                <p class="text-xs muted-text">Gwarancja uzupełnienia przy spadkach obserwujących</p>
+              </div>
+            </div>
+            <div class="space-y-2" id="refill-options">
+              <label class="refill-option" onclick="selectRefill('none',this)">
+                <input type="radio" name="refill" value="none" checked/>
+                <div class="flex-1"><p class="text-sm font-semibold primary-text">Bez ubezpieczenia</p><p class="text-xs muted-text">Brak gwarancji uzupełnienia</p></div>
+                <span class="text-sm font-bold muted-text">+0 zł</span>
+              </label>
+              <label class="refill-option" onclick="selectRefill('30',this)">
+                <input type="radio" name="refill" value="30"/>
+                <div class="flex-1"><p class="text-sm font-semibold primary-text">30 dni</p><p class="text-xs muted-text">Refill przez miesiąc</p></div>
+                <span id="refill-price-30" class="text-sm font-bold text-violet-600">+0 zł</span>
+              </label>
+              <label class="refill-option" onclick="selectRefill('60',this)">
+                <input type="radio" name="refill" value="60"/>
+                <div class="flex-1"><p class="text-sm font-semibold primary-text">60 dni</p><p class="text-xs muted-text">Refill przez 2 miesiące</p></div>
+                <span id="refill-price-60" class="text-sm font-bold text-violet-600">+0 zł</span>
+              </label>
+              <label class="refill-option" onclick="selectRefill('90',this)">
+                <input type="radio" name="refill" value="90"/>
+                <div class="flex-1"><p class="text-sm font-semibold primary-text">90 dni</p><p class="text-xs muted-text">Refill przez 3 miesiące</p></div>
+                <span id="refill-price-90" class="text-sm font-bold text-violet-600">+0 zł</span>
+              </label>
+              <label class="refill-option" onclick="selectRefill('365',this)">
+                <input type="radio" name="refill" value="365"/>
+                <div class="flex-1"><p class="text-sm font-semibold primary-text">365 dni <span class="refill-badge">Najlepsza oferta</span></p><p class="text-xs muted-text">Refill przez cały rok</p></div>
+                <span id="refill-price-365" class="text-sm font-bold text-violet-600">+0 zł</span>
+              </label>
+            </div>
+          </div>
+        </div>
         <!-- Step 3 -->
         <div>
           <label class="block text-xs font-semibold section-label uppercase tracking-widest mb-3">3. Ilość obserwujących</label>
@@ -512,40 +419,36 @@
             <button class="qty-pill px-3 py-1.5 rounded-xl" onclick="setQty(5000)">5 000</button>
             <button class="qty-pill px-3 py-1.5 rounded-xl" onclick="setQty(10000)">10 000</button>
           </div>
-          <input type="range" id="qty-slider" min="250" max="10000" step="250" value="1000"
-            class="slider-ig w-full" oninput="onSlider(this.value)" />
-          <div class="flex justify-between text-xs mt-2" style="color:var(--text-muted)">
-            <span>250</span><span>10 000</span>
-          </div>
+          <div style="position:relative">
+          <input type="range" id="qty-slider" min="250" max="10000" step="250" value="1000" class="slider-ig w-full" oninput="onSlider(this.value);updateSliderFill(this)"/>
+          <div id="slider-tooltip" style="position:absolute;top:-38px;transform:translateX(-50%);background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;padding:4px 10px;border-radius:8px;font-size:.75rem;font-weight:700;pointer-events:none;white-space:nowrap;opacity:0;transition:opacity .2s;box-shadow:0 4px 12px rgba(124,58,237,0.4)">1 000</div>
+        </div>
+          <div class="flex justify-between text-xs mt-2" style="color:var(--text-muted)"><span>250</span><span>10 000</span></div>
           <div class="mt-3 text-center">
             <span class="text-sm muted-text">Wybrana ilość: </span>
             <span id="qty-display" class="font-display font-bold text-violet-600 text-xl">1 000</span>
           </div>
         </div>
-
         <!-- Step 4 -->
         <div>
           <label class="block text-xs font-semibold section-label uppercase tracking-widest mb-3">4. Metoda płatności</label>
           <div class="space-y-2">
             <label class="stripe-method selected-method" id="method-card" onclick="selectMethod('card')">
-              <input type="radio" name="payment" value="card" checked />
+              <input type="radio" name="payment" value="card" checked/>
               <svg class="w-8 h-5" viewBox="0 0 38 24" fill="none"><rect width="38" height="24" rx="4" fill="#1a1f71"/><rect y="6" width="38" height="6" fill="#f7b731"/><rect x="4" y="15" width="8" height="3" rx="1" fill="white" opacity=".8"/></svg>
-              <div>
-                <p class="text-sm font-semibold primary-text">Karta kredytowa / debetowa</p>
-                <p class="text-xs muted-text">Visa, Mastercard, Amex</p>
-              </div>
+              <div><p class="text-sm font-semibold primary-text">Karta kredytowa / debetowa</p><p class="text-xs muted-text">Visa, Mastercard, Amex</p></div>
               <div class="ml-auto flex gap-1.5 items-center">
                 <svg viewBox="0 0 40 16" width="38" height="15"><text x="0" y="13" font-size="13" fill="#1a1f71" font-family="Arial" font-weight="bold">VISA</text></svg>
                 <svg viewBox="0 0 32 20" width="30" height="20"><circle cx="12" cy="10" r="10" fill="#eb001b"/><circle cx="20" cy="10" r="10" fill="#f79e1b" opacity=".9"/></svg>
               </div>
             </label>
             <label class="stripe-method" id="method-blik" onclick="selectMethod('blik')">
-              <input type="radio" name="payment" value="blik" />
+              <input type="radio" name="payment" value="blik"/>
               <svg class="w-8 h-8" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="8" fill="#e53935"/><text x="7" y="26" font-size="13" fill="white" font-family="Arial" font-weight="bold">BLIK</text></svg>
               <div><p class="text-sm font-semibold primary-text">BLIK</p><p class="text-xs muted-text">Szybka płatność kodem BLIK</p></div>
             </label>
             <label class="stripe-method" id="method-p24" onclick="selectMethod('p24')">
-              <input type="radio" name="payment" value="p24" />
+              <input type="radio" name="payment" value="p24"/>
               <svg class="w-8 h-8" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="8" fill="#cc0000"/><text x="4" y="26" font-size="12" fill="white" font-family="Arial" font-weight="bold">P24</text></svg>
               <div><p class="text-sm font-semibold primary-text">Przelewy24</p><p class="text-xs muted-text">Przelew online, wszystkie banki PL</p></div>
             </label>
@@ -555,10 +458,9 @@
             <span>Płatności obsługiwane przez Stripe – szyfrowanie SSL 256-bit, PCI DSS Level 1</span>
           </div>
         </div>
-
         <!-- Summary -->
         <div class="summary-box rounded-2xl p-5" style="position:relative;overflow:hidden">
-          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(124,58,237,0.03),transparent);pointer-events:none"></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(124,58,237,0.04),transparent);pointer-events:none"></div>
           <div class="flex items-center justify-between relative">
             <div>
               <p class="text-xs muted-text mb-0.5">Podsumowanie</p>
@@ -574,47 +476,46 @@
             Bezpieczna płatność przez Stripe · Realizacja do 1 dnia roboczego
           </div>
         </div>
-
         <!-- CTA -->
-        <button id="cta-btn" onclick="handleOrder()"
-          class="cta-btn cta-btn-ig w-full py-4 rounded-2xl text-white font-display font-bold text-lg flex items-center justify-center gap-3" style="box-shadow:0 12px 32px rgba(124,58,237,0.3)">
+        <button id="cta-btn" onclick="handleOrder()" class="cta-btn cta-btn-ig w-full py-4 rounded-2xl text-white font-display font-bold text-lg flex items-center justify-center gap-3" style="box-shadow:0 12px 36px rgba(124,58,237,0.32)">
           <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
           Zapłać przez Stripe
         </button>
-
-        <p class="text-center text-xs muted-text">
-          Realizując zamówienie akceptujesz <a href="#" class="text-violet-500 hover:underline">Regulamin</a>. Dostawa do 1 dnia roboczego od potwierdzenia płatności.
-        </p>
+        <p class="text-center text-xs muted-text">Realizując zamówienie akceptujesz <a href="#" class="text-violet-500 hover:underline">Regulamin</a>. Dostawa do 1 dnia roboczego od potwierdzenia płatności.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ TRUST ============ -->
-<section class="py-10 px-4 max-w-2xl mx-auto reveal">
-  <p class="text-center text-xs font-semibold uppercase tracking-widest section-label mb-6">Dlaczego warto nam zaufać?</p>
+<!-- TRUST -->
+<section class="py-10 px-4 max-w-2xl mx-auto">
+  <div class="text-center mb-6 reveal">
+    <div class="section-divider"></div>
+    <p class="text-xs font-semibold uppercase tracking-widest section-label">Dlaczego warto nam zaufać?</p>
+  </div>
   <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-    <div class="trust-item rounded-2xl p-5 text-center">
+    <div class="trust-item rounded-2xl p-5 text-center reveal">
       <div class="trust-icon w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl" style="background:var(--summary-bg)">⚡</div>
       <p class="font-display font-bold primary-text text-sm mb-1">Ekspresowa dostawa</p>
       <p class="muted-text text-xs">Obserwujący trafiają na Twój profil do 1 dnia roboczego</p>
     </div>
-    <div class="trust-item rounded-2xl p-5 text-center">
+    <div class="trust-item rounded-2xl p-5 text-center reveal reveal-delay-1">
       <div class="trust-icon w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl" style="background:#f0fdf4">🔒</div>
       <p class="font-display font-bold primary-text text-sm mb-1">Stripe & SSL</p>
       <p class="muted-text text-xs">Płatności przez Stripe – standard PCI DSS, szyfrowanie SSL</p>
     </div>
-    <div class="trust-item rounded-2xl p-5 text-center">
-      <div class="trust-icon w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl" style="background:#fef9ee">🇵🇱</div>
-      <p class="font-display font-bold primary-text text-sm mb-1">Polska obsługa</p>
+    <div class="trust-item rounded-2xl p-5 text-center reveal reveal-delay-2">
+      <div class="trust-icon w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3" style="background:linear-gradient(135deg,#dc143c,#ff4d6d);box-shadow:0 4px 16px rgba(220,20,60,0.35);font-size:1.6rem">🇵🇱</div>
+      <p class="font-display font-bold primary-text text-sm mb-1">🇵🇱 Polska obsługa</p>
       <p class="muted-text text-xs">Wsparcie po polsku, płatności w PLN, BLIK i Przelewy24</p>
     </div>
   </div>
 </section>
 
-<!-- ============ OPINIE ============ -->
-<section class="py-10 px-4 max-w-2xl mx-auto reveal">
-  <div class="text-center mb-8">
+<!-- REVIEWS -->
+<section class="py-10 px-4 max-w-2xl mx-auto">
+  <div class="text-center mb-8 reveal">
+    <div class="section-divider"></div>
     <p class="text-xs font-semibold uppercase tracking-widest section-label mb-2">Opinie klientów</p>
     <h2 class="font-display font-extrabold text-2xl primary-text">Co mówią nasi klienci?</h2>
     <div class="flex items-center justify-center gap-2 mt-2">
@@ -623,63 +524,15 @@
       <span class="text-xs muted-text">/ 5.0 · 1 284 opinie</span>
     </div>
   </div>
-  <div class="reviews-grid">
-    <div class="review-card rounded-2xl p-4 shadow-sm">
-      <div class="flex items-center gap-2 mb-2">
-        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-rose-400 to-violet-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">KW</div>
-        <div><p class="font-semibold primary-text text-sm">Karolina W.</p><p class="text-xs muted-text">Instagram · Premium</p></div>
-        <span class="stars-row text-xs ml-auto">★★★★★</span>
-      </div>
-      <p class="muted-text text-sm">„Zamawiałam pakiet Premium na Instagram. Obserwujący pojawili się następnego dnia rano – super jakość, zdecydowanie polecam!"</p>
-      <p class="text-xs muted-text mt-2 opacity-60">2 dni temu</p>
-    </div>
-    <div class="review-card rounded-2xl p-4 shadow-sm">
-      <div class="flex items-center gap-2 mb-2">
-        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-sky-400 to-cyan-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">MT</div>
-        <div><p class="font-semibold primary-text text-sm">Michał T.</p><p class="text-xs muted-text">TikTok · Real</p></div>
-        <span class="stars-row text-xs ml-auto">★★★★★</span>
-      </div>
-      <p class="muted-text text-sm">„TikTok Real – pakiet 5000 szt. Dostawa tego samego dnia roboczego wieczorem. Moje wideo zaczęło się kręcić!"</p>
-      <p class="text-xs muted-text mt-2 opacity-60">4 dni temu</p>
-    </div>
-    <div class="review-card rounded-2xl p-4 shadow-sm">
-      <div class="flex items-center gap-2 mb-2">
-        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">AK</div>
-        <div><p class="font-semibold primary-text text-sm">Agnieszka K.</p><p class="text-xs muted-text">Instagram · Basic</p></div>
-        <span class="stars-row text-xs ml-auto">★★★★★</span>
-      </div>
-      <p class="muted-text text-sm">„Płatność Stripe poszła błyskawicznie, potwierdzenie mailem od razu. Profesjonalna obsługa!"</p>
-      <p class="text-xs muted-text mt-2 opacity-60">1 tydzień temu</p>
-    </div>
-    <div class="review-card rounded-2xl p-4 shadow-sm">
-      <div class="flex items-center gap-2 mb-2">
-        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">PB</div>
-        <div><p class="font-semibold primary-text text-sm">Patryk B.</p><p class="text-xs muted-text">TikTok · Premium</p></div>
-        <span class="stars-row text-xs ml-auto">★★★★★</span>
-      </div>
-      <p class="muted-text text-sm">„Drugi raz korzystam. 2500 obserwujących TikTok – dostawa następnego dnia. Strona prosta i bezpieczna."</p>
-      <p class="text-xs muted-text mt-2 opacity-60">1 tydzień temu</p>
-    </div>
-    <div class="review-card rounded-2xl p-4 shadow-sm">
-      <div class="flex items-center gap-2 mb-2">
-        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-fuchsia-400 to-pink-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">EJ</div>
-        <div><p class="font-semibold primary-text text-sm">Ewelina J.</p><p class="text-xs muted-text">Instagram · Real</p></div>
-        <span class="stars-row text-xs ml-auto">★★★★★</span>
-      </div>
-      <p class="muted-text text-sm">„Pakiet Real to inna liga – konta wyglądają na prawdziwe, zaangażowanie wzrosło. Zapłaciłam kartą przez Stripe, zero problemów."</p>
-      <p class="text-xs muted-text mt-2 opacity-60">2 tygodnie temu</p>
-    </div>
-    <div class="review-card rounded-2xl p-4 shadow-sm">
-      <div class="flex items-center gap-2 mb-2">
-        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">LN</div>
-        <div><p class="font-semibold primary-text text-sm">Łukasz N.</p><p class="text-xs muted-text">Instagram · Premium</p></div>
-        <span class="stars-row text-xs ml-auto">★★★★☆</span>
-      </div>
-      <p class="muted-text text-sm">„Dostawa ponad 12 godzin, ale mieściło się w dniu roboczym. Jakość Premium zdecydowanie lepsza niż inne serwisy."</p>
-      <p class="text-xs muted-text mt-2 opacity-60">3 tygodnie temu</p>
-    </div>
+  <div class="reviews-grid reveal">
+    <div class="review-card rounded-2xl p-4 shadow-sm"><div class="flex items-center gap-2 mb-2"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-rose-400 to-violet-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">KW</div><div><p class="font-semibold primary-text text-sm">Karolina W.</p><p class="text-xs muted-text">Instagram · Premium</p></div><span class="stars-row text-xs ml-auto">★★★★★</span></div><p class="muted-text text-sm">„Zamawiałam pakiet Premium na Instagram. Obserwujący pojawili się następnego dnia rano – super jakość, zdecydowanie polecam!"</p><p class="text-xs muted-text mt-2 opacity-60">2 dni temu</p></div>
+    <div class="review-card rounded-2xl p-4 shadow-sm"><div class="flex items-center gap-2 mb-2"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-sky-400 to-cyan-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">MT</div><div><p class="font-semibold primary-text text-sm">Michał T.</p><p class="text-xs muted-text">TikTok · Real</p></div><span class="stars-row text-xs ml-auto">★★★★★</span></div><p class="muted-text text-sm">„TikTok Real – pakiet 5000 szt. Dostawa tego samego dnia roboczego wieczorem. Moje wideo zaczęło się kręcić!"</p><p class="text-xs muted-text mt-2 opacity-60">4 dni temu</p></div>
+    <div class="review-card rounded-2xl p-4 shadow-sm"><div class="flex items-center gap-2 mb-2"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">AK</div><div><p class="font-semibold primary-text text-sm">Agnieszka K.</p><p class="text-xs muted-text">Instagram · Basic</p></div><span class="stars-row text-xs ml-auto">★★★★★</span></div><p class="muted-text text-sm">„Płatność Stripe poszła błyskawicznie, potwierdzenie mailem od razu. Profesjonalna obsługa!"</p><p class="text-xs muted-text mt-2 opacity-60">1 tydzień temu</p></div>
+    <div class="review-card rounded-2xl p-4 shadow-sm"><div class="flex items-center gap-2 mb-2"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">PB</div><div><p class="font-semibold primary-text text-sm">Patryk B.</p><p class="text-xs muted-text">TikTok · Premium</p></div><span class="stars-row text-xs ml-auto">★★★★★</span></div><p class="muted-text text-sm">„Drugi raz korzystam. 2500 obserwujących TikTok – dostawa następnego dnia. Strona prosta i bezpieczna."</p><p class="text-xs muted-text mt-2 opacity-60">1 tydzień temu</p></div>
+    <div class="review-card rounded-2xl p-4 shadow-sm"><div class="flex items-center gap-2 mb-2"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-fuchsia-400 to-pink-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">EJ</div><div><p class="font-semibold primary-text text-sm">Ewelina J.</p><p class="text-xs muted-text">Instagram · Real</p></div><span class="stars-row text-xs ml-auto">★★★★★</span></div><p class="muted-text text-sm">„Pakiet Real to inna liga – konta wyglądają na prawdziwe, zaangażowanie wzrosło. Zero problemów."</p><p class="text-xs muted-text mt-2 opacity-60">2 tygodnie temu</p></div>
+    <div class="review-card rounded-2xl p-4 shadow-sm"><div class="flex items-center gap-2 mb-2"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">LN</div><div><p class="font-semibold primary-text text-sm">Łukasz N.</p><p class="text-xs muted-text">Instagram · Premium</p></div><span class="stars-row text-xs ml-auto">★★★★☆</span></div><p class="muted-text text-sm">„Dostawa ponad 12 godzin, ale mieściło się w dniu roboczym. Jakość Premium zdecydowanie lepsza niż inne serwisy."</p><p class="text-xs muted-text mt-2 opacity-60">3 tygodnie temu</p></div>
   </div>
-  <div class="mt-6 text-center">
+  <div class="mt-6 text-center reveal">
     <div class="inline-flex items-center gap-3 rounded-2xl px-6 py-3 border" style="background:var(--card-bg);border-color:var(--card-border)">
       <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
       <span class="text-sm muted-text">Opinie zweryfikowane · Prawdziwi klienci FollowFlow</span>
@@ -687,20 +540,86 @@
   </div>
 </section>
 
-<!-- ============ FOOTER ============ -->
+<!-- FAQ -->
+<section class="py-10 px-4 max-w-2xl mx-auto">
+  <div class="text-center mb-8 reveal">
+    <div class="section-divider"></div>
+    <p class="text-xs font-semibold uppercase tracking-widest section-label mb-2">Masz pytania?</p>
+    <h2 class="font-display font-extrabold text-2xl primary-text">Często zadawane pytania</h2>
+  </div>
+  <div class="space-y-3">
+    <div class="faq-item rounded-2xl overflow-hidden reveal" onclick="toggleFaq(this)">
+      <div class="flex items-center gap-4 p-5">
+        <div class="faq-icon-circle">
+          <svg class="faq-icon" style="color:var(--text-muted)" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        </div>
+        <div class="flex-1">
+          <p class="font-display font-bold primary-text text-sm md:text-base">Ile trwa realizacja zamówienia?</p>
+        </div>
+        <svg class="w-4 h-4 muted-text flex-shrink-0 transition-transform duration-300" id="faq-arrow-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </div>
+      <div class="faq-answer px-5 pb-0">
+        <div class="pb-5 border-t" style="border-color:var(--card-border);padding-top:12px">
+          <p class="muted-text text-sm leading-relaxed">Zamówienia są realizowane zazwyczaj do 24 godzin od momentu zakupu. W wyjątkowych sytuacjach czas ten może nieznacznie się wydłużyć.</p>
+        </div>
+      </div>
+    </div>
+    <div class="faq-item rounded-2xl overflow-hidden reveal reveal-delay-1" onclick="toggleFaq(this)">
+      <div class="flex items-center gap-4 p-5">
+        <div class="faq-icon-circle">
+          <svg class="faq-icon" style="color:var(--text-muted)" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        </div>
+        <div class="flex-1">
+          <p class="font-display font-bold primary-text text-sm md:text-base">Czy followersi mogą zniknąć?</p>
+        </div>
+        <svg class="w-4 h-4 muted-text flex-shrink-0 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </div>
+      <div class="faq-answer px-5 pb-0">
+        <div class="pb-5 border-t" style="border-color:var(--card-border);padding-top:12px">
+          <div class="space-y-2">
+            <p class="muted-text text-sm leading-relaxed">To zależy od wybranego pakietu. Oto szczegóły:</p>
+            <div style="background:var(--badge-bg);border-radius:12px;padding:10px 14px" class="space-y-1.5">
+              <div class="flex items-start gap-2"><span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:#f3f4f6;color:#6b7280;flex-shrink:0">Basic</span><p class="text-xs muted-text">Spadki są normalne i mogą się zdarzać – to najtańszy pakiet. Zalecamy wykupienie ubezpieczenia jeśli zależy Ci na stabilności.</p></div>
+              <div class="flex items-start gap-2"><span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;flex-shrink:0">Premium</span><p class="text-xs muted-text">Spadki nie powinny przekroczyć <strong class="primary-text">20%</strong>. Przy braku ubezpieczenia nie oferujemy uzupełnienia.</p></div>
+              <div class="flex items-start gap-2"><span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:linear-gradient(135deg,#f43f5e,#c026d3);color:#fff;flex-shrink:0">Real</span><p class="text-xs muted-text">Spadki nie powinny przekroczyć <strong class="primary-text">20%</strong>. Przy braku ubezpieczenia nie oferujemy uzupełnienia.</p></div>
+            </div>
+            <p class="text-xs muted-text">💡 Aby mieć pewność uzupełnienia – wykup <strong class="text-violet-500">ubezpieczenie refill</strong> przy składaniu zamówienia.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="faq-item rounded-2xl overflow-hidden reveal reveal-delay-2" onclick="toggleFaq(this)">
+      <div class="flex items-center gap-4 p-5">
+        <div class="faq-icon-circle">
+          <svg class="faq-icon" style="color:var(--text-muted)" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        </div>
+        <div class="flex-1">
+          <p class="font-display font-bold primary-text text-sm md:text-base">Jak mogę skontaktować się z obsługą?</p>
+        </div>
+        <svg class="w-4 h-4 muted-text flex-shrink-0 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </div>
+      <div class="faq-answer px-5 pb-0">
+        <div class="pb-5 border-t" style="border-color:var(--card-border);padding-top:12px">
+          <p class="muted-text text-sm leading-relaxed">W przypadku jakichkolwiek problemów lub pytań skontaktuj się z nami pod adresem: <a href="mailto:FollowFlowSupport@proton.me" class="text-violet-500 font-semibold hover:underline">FollowFlowSupport@proton.me</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- FOOTER -->
 <footer class="border-t py-8 px-4 text-center text-xs mt-4" style="border-color:var(--footer-border);color:var(--footer-text)">
   <p class="font-display font-bold primary-text text-base mb-2">FollowFlow</p>
   <div class="flex justify-center gap-1 mb-3 items-center">
     <svg viewBox="0 0 60 25" width="45" height="20" fill="none"><rect width="60" height="25" rx="5" fill="#635bff"/><text x="8" y="17" font-size="12" fill="white" font-family="Arial" font-weight="bold">stripe</text></svg>
     <span class="ml-1">Powered by Stripe · PCI DSS · SSL 256-bit</span>
   </div>
-  <p>© 2025 FollowFlow. Wszelkie prawa zastrzeżone. ·
-    <a href="#" class="hover:text-violet-500 transition-colors">Regulamin</a> ·
-    <a href="#" class="hover:text-violet-500 transition-colors">Polityka prywatności</a>
-  </p>
+  <p>© 2025 FollowFlow. Wszelkie prawa zastrzeżone. · <a href="#" class="hover:text-violet-500 transition-colors">Regulamin</a> · <a href="#" class="hover:text-violet-500 transition-colors">Polityka prywatności</a></p>
 </footer>
 
-<!-- ============ MODAL ============ -->
+<!-- MODAL -->
 <div id="order-modal" class="modal-overlay" onclick="closeModal(event)">
   <div class="modal-card rounded-3xl shadow-2xl p-8 max-w-sm w-full mx-4 text-center" style="background:var(--modal-bg)">
     <div id="modal-icon" class="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center mx-auto mb-4 text-3xl shadow-lg">💳</div>
@@ -714,16 +633,14 @@
       </div>
       <p class="text-xs muted-text">Płatność jest szyfrowana i bezpieczna. Realizacja zamówienia do <strong class="primary-text">1 dnia roboczego</strong> od potwierdzenia płatności.</p>
     </div>
-    <button id="pay-btn" onclick="initiateStripePayment()"
-      class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-display font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2">
+    <button id="pay-btn" onclick="initiateStripePayment()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-display font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2">
       <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
       Zapłać teraz
     </button>
-    <button onclick="closeModal(null, true)" class="mt-3 muted-text text-sm hover:text-gray-600 transition-colors w-full">Anuluj</button>
+    <button onclick="closeModal(null,true)" class="mt-3 muted-text text-sm hover:text-gray-600 transition-colors w-full">Anuluj</button>
   </div>
 </div>
 
-<!-- ============ JS ============ -->
 <script>
   // ===== STRIPE =====
   const STRIPE_PK = 'pk_live_51R1XIeH8Z8w2dY6ZAWZMfUApKrXjVWhOkjXFCUsdu9UMYmaT0TOEwGthMlK37bYRbsvIgGFwBPsimvKgOKtfOTeX00gNb6nQdi';
@@ -731,218 +648,760 @@
 
   // ===== STATE =====
   let state = { platform:'ig', package:'basic', qty:1000, method:'card' };
-  const prices = { basic:8.99, premium:12.99, real:14.99 };
+
+  // Separate prices for IG and TT
+  const pricesIG = { basic:8.99, premium:12.99, real:16.99 };
+  const pricesTT = { basic:12.99, premium:14.99, real:18.99 };
+  let prices = pricesIG;
+
   const packageNames = { basic:'Basic', premium:'Premium', real:'Real' };
   const methodLabels = { card:'Karta kredytowa/debetowa', blik:'BLIK', p24:'Przelewy24' };
 
   // ===== CURSOR GLOW =====
   const glowEl = document.getElementById('cursor-glow');
-  document.addEventListener('mousemove', e => {
-    glowEl.style.opacity = '1';
-    glowEl.style.left = e.clientX + 'px';
-    glowEl.style.top = e.clientY + 'px';
-  });
-  document.addEventListener('mouseleave', () => { glowEl.style.opacity = '0' });
+  let mouseX=0,mouseY=0,glowX=0,glowY=0;
+  document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;glowEl.style.opacity='1'});
+  document.addEventListener('mouseleave',()=>{glowEl.style.opacity='0'});
+  function animateGlow(){
+    glowX+=(mouseX-glowX)*.08; glowY+=(mouseY-glowY)*.08;
+    glowEl.style.left=glowX+'px'; glowEl.style.top=glowY+'px';
+    requestAnimationFrame(animateGlow);
+  }
+  animateGlow();
 
   // ===== PARTICLES =====
-  function spawnParticle() {
-    const c = document.getElementById('particles-container');
-    if (!c) return;
-    const p = document.createElement('div');
-    const size = Math.random() * 6 + 3;
-    const colors = ['rgba(124,58,237,0.5)','rgba(244,63,94,0.4)','rgba(168,85,247,0.5)','rgba(56,189,248,0.4)'];
-    p.className = 'particle';
-    p.style.cssText = `
-      width:${size}px;height:${size}px;
-      background:${colors[Math.floor(Math.random()*colors.length)]};
-      left:${Math.random()*100}%;
-      animation-duration:${Math.random()*8+6}s;
-      animation-delay:${Math.random()*4}s;
-    `;
-    c.appendChild(p);
-    setTimeout(() => p.remove(), 14000);
+  function spawnParticle(){
+    const c=document.getElementById('particles-container');if(!c)return;
+    const p=document.createElement('div');
+    const size=Math.random()*6+3;
+    const colors=['rgba(124,58,237,0.5)','rgba(244,63,94,0.4)','rgba(168,85,247,0.5)','rgba(56,189,248,0.4)'];
+    p.className='particle';
+    p.style.cssText=`width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};left:${Math.random()*100}%;animation-duration:${Math.random()*8+6}s;animation-delay:${Math.random()*3}s;`;
+    c.appendChild(p);setTimeout(()=>p.remove(),14000);
   }
-  setInterval(spawnParticle, 800);
+  setInterval(spawnParticle,900);
 
   // ===== LIVE COUNTER =====
-  let liveCount = 14287;
-  setInterval(() => {
-    if (Math.random() > 0.6) {
-      liveCount += Math.floor(Math.random() * 3) + 1;
-      const el = document.getElementById('live-counter');
-      if (el) el.textContent = liveCount.toLocaleString('pl-PL');
+  let liveCount=14287;
+  setInterval(()=>{
+    if(Math.random()>.6){liveCount+=Math.floor(Math.random()*3)+1;
+    const el=document.getElementById('live-counter');if(el)el.textContent=liveCount.toLocaleString('pl-PL');}
+  },4500);
+
+  // ===== SLIDER FILL + TOOLTIP =====
+  function updateSliderFill(slider) {
+    const min = parseFloat(slider.min);
+    const max = parseFloat(slider.max);
+    const val = parseFloat(slider.value);
+    const pct = ((val - min) / (max - min)) * 100;
+    const isDark = document.documentElement.classList.contains('dark');
+    const isPlatTT = state.platform === 'tt';
+    const fromColor = isPlatTT ? '#38bdf8' : '#f43f5e';
+    const toColor = isPlatTT ? '#0ea5e9' : '#c026d3';
+    slider.style.background = `linear-gradient(to right, ${fromColor} 0%, ${toColor} ${pct}%, ${isDark ? '#2a2a3a' : '#e5e7eb'} ${pct}%)`;
+    // Update tooltip
+    const tooltip = document.getElementById('slider-tooltip');
+    if (tooltip) {
+      tooltip.textContent = parseInt(val).toLocaleString('pl-PL');
+      tooltip.style.left = `calc(${pct}% + ${8 - pct * 0.16}px)`;
     }
-  }, 4000);
-
-  // ===== SCROLL REVEAL =====
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-  // ===== INPUT CHECKMARK =====
-  document.getElementById('username-input').addEventListener('input', function() {
-    const ck = document.getElementById('input-checkmark');
-    ck.style.opacity = this.value.trim().length > 2 ? '1' : '0';
-  });
-
-  // ===== DARK MODE =====
-  function toggleTheme() {
-    const isDark = document.documentElement.classList.toggle('dark');
-    document.getElementById('theme-label').textContent = isDark ? '🌙' : '☀️';
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  }
-  if (localStorage.getItem('theme') === 'dark') {
-    document.documentElement.classList.add('dark');
-    document.getElementById('theme-label').textContent = '🌙';
   }
 
-  // ===== PLATFORM =====
-  function setPlatform(platform) {
-    state.platform = platform;
-    const btnIG = document.getElementById('btn-ig');
-    const btnTT = document.getElementById('btn-tt');
-    btnIG.className = 'platform-btn flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-display font-semibold text-sm';
-    btnTT.className = 'platform-btn flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-display font-semibold text-sm';
-    const label = document.getElementById('platform-label');
-    const icon = document.getElementById('platform-icon');
-    const slider = document.getElementById('qty-slider');
-    const ctaBtn = document.getElementById('cta-btn');
-    if (platform === 'ig') {
-      btnIG.classList.add('active-ig');
-      label.textContent = 'Instagram – Obserwujący';
-      icon.className = 'w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg bg-gradient-to-br from-rose-500 to-violet-600';
-      icon.style.boxShadow = '0 8px 20px rgba(124,58,237,0.35)';
-      icon.innerHTML = `<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>`;
-      slider.className = 'slider-ig w-full';
-      ctaBtn.className = 'cta-btn cta-btn-ig w-full py-4 rounded-2xl text-white font-display font-bold text-lg flex items-center justify-center gap-3';
-      ctaBtn.style.boxShadow = '0 12px 32px rgba(124,58,237,0.3)';
-    } else {
-      btnTT.classList.add('active-tt');
-      label.textContent = 'TikTok – Obserwujący';
-      icon.className = 'w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg bg-gradient-to-br from-gray-900 to-sky-700';
-      icon.style.boxShadow = '0 8px 20px rgba(56,189,248,0.3)';
-      icon.innerHTML = `<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>`;
-      slider.className = 'slider-tt w-full';
-      ctaBtn.className = 'cta-btn cta-btn-tt w-full py-4 rounded-2xl text-white font-display font-bold text-lg flex items-center justify-center gap-3';
-      ctaBtn.style.boxShadow = '0 12px 32px rgba(56,189,248,0.25)';
-    }
+  function showSliderTooltip(show) {
+    const t = document.getElementById('slider-tooltip');
+    if (t) t.style.opacity = show ? '1' : '0';
+  }
+
+
+  // ===== REFILL INSURANCE =====
+  const refillRates = {
+    basic:  { '30':1.0, '60':1.5, '90':2.5, '365':3.0 },
+    premium:{ '30':1.0, '60':2.0, '90':3.0, '365':4.0 },
+    real:   { '30':5.0, '60':6.0, '90':7.0, '365':8.0 },
+  };
+  let selectedRefill = 'none';
+
+  function selectRefill(period, el) {
+    selectedRefill = period;
+    document.querySelectorAll('.refill-option').forEach(o => {
+      o.classList.remove('selected-refill');
+      o.querySelector('input').checked = false;
+    });
+    el.classList.add('selected-refill');
+    el.querySelector('input').checked = true;
     updatePrice();
   }
 
+  function updateRefillSection() {
+    const section = document.getElementById('refill-section');
+    if (!section) return;
+    const showRefill = state.platform === 'ig' && (state.package === 'premium' || state.package === 'real' || state.package === 'basic');
+    if (showRefill) {
+      section.classList.add('visible');
+    } else {
+      section.classList.remove('visible');
+      selectedRefill = 'none';
+      document.querySelectorAll('.refill-option').forEach((o,i) => {
+        o.classList.toggle('selected-refill', i===0);
+        o.querySelector('input').checked = (i===0);
+      });
+    }
+    // Update refill prices display
+    const rates = refillRates[state.package] || refillRates.basic;
+    const qtyK = state.qty / 1000;
+    ['30','60','90','365'].forEach(p => {
+      const el = document.getElementById('refill-price-'+p);
+      if (el) {
+        const add = (rates[p] * qtyK).toFixed(2).replace('.',',');
+        el.textContent = '+' + add + ' zł';
+      }
+    });
+  }
+
+  function getRefillCost() {
+    if (selectedRefill === 'none') return 0;
+    const rates = refillRates[state.package] || refillRates.basic;
+    return (rates[selectedRefill] || 0) * (state.qty / 1000);
+  }
+
+  // ===== SCROLL REVEAL =====
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting) e.target.classList.add('visible');
+    });
+  },{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+  // ===== INPUT CHECKMARK =====
+  document.getElementById('username-input').addEventListener('input',function(){
+    document.getElementById('input-checkmark').style.opacity=this.value.trim().length>2?'1':'0';
+  });
+
+  // ===== DARK MODE =====
+  function toggleTheme(){
+    const isDark=document.documentElement.classList.toggle('dark');
+    document.getElementById('theme-label').textContent=isDark?'🌙':'☀️';
+    localStorage.setItem('theme',isDark?'dark':'light');
+  }
+  if(localStorage.getItem('theme')==='dark'){
+    document.documentElement.classList.add('dark');
+    document.getElementById('theme-label').textContent='🌙';
+  }
+
+  // ===== FAQ =====
+  function toggleFaq(item){
+    const isOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(f=>f.classList.remove('open'));
+    if(!isOpen)item.classList.add('open');
+  }
+
+  // ===== PLATFORM =====
+  function updatePkgPrices(){
+    const p=prices;
+    document.getElementById('price-basic').innerHTML=p.basic.toFixed(2).replace('.',',')+' zł<span class="muted-text font-normal text-xs"> /1k</span>';
+    document.getElementById('price-premium').innerHTML=p.premium.toFixed(2).replace('.',',')+' zł<span class="muted-text font-normal text-xs"> /1k</span>';
+    document.getElementById('price-real').innerHTML=p.real.toFixed(2).replace('.',',')+' zł<span class="muted-text font-normal text-xs"> /1k</span>';
+    const noteEl=document.getElementById('pkg-note-text');
+    if(noteEl)noteEl.textContent=(state.platform==='ig'?'Ceny Instagram':'Ceny TikTok')+' za 1000 obserwujących';
+  }
+
+  function setPlatform(platform){
+    state.platform=platform;
+    prices=platform==='ig'?pricesIG:pricesTT;
+    updatePkgPrices();
+    const btnIG=document.getElementById('btn-ig');
+    const btnTT=document.getElementById('btn-tt');
+    btnIG.className='platform-btn flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-display font-semibold text-sm';
+    btnTT.className='platform-btn flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-display font-semibold text-sm';
+    const label=document.getElementById('platform-label');
+    const icon=document.getElementById('platform-icon');
+    const slider=document.getElementById('qty-slider');
+    const ctaBtn=document.getElementById('cta-btn');
+    if(platform==='ig'){
+      btnIG.classList.add('active-ig');
+      label.textContent='Instagram – Obserwujący';
+      icon.className='w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg bg-gradient-to-br from-rose-500 to-violet-600';
+      icon.style.boxShadow='0 8px 20px rgba(124,58,237,0.35)';
+      icon.innerHTML='<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>';
+      slider.className='slider-ig w-full';updateSliderFill(slider);
+      ctaBtn.className='cta-btn cta-btn-ig w-full py-4 rounded-2xl text-white font-display font-bold text-lg flex items-center justify-center gap-3';
+      ctaBtn.style.boxShadow='0 12px 36px rgba(124,58,237,0.32)';
+    }else{
+      btnTT.classList.add('active-tt');
+      label.textContent='TikTok – Obserwujący';
+      icon.className='w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg bg-gradient-to-br from-gray-900 to-sky-700';
+      icon.style.boxShadow='0 8px 20px rgba(56,189,248,0.3)';
+      icon.innerHTML='<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>';
+      slider.className='slider-tt w-full';updateSliderFill(slider);
+      ctaBtn.className='cta-btn cta-btn-tt w-full py-4 rounded-2xl text-white font-display font-bold text-lg flex items-center justify-center gap-3';
+      ctaBtn.style.boxShadow='0 12px 36px rgba(56,189,248,0.25)';
+    }
+    updatePrice();
+
+  // Init slider fill on load
+  setTimeout(() => {
+    const sl = document.getElementById('qty-slider');
+    if (sl) {
+      updateSliderFill(sl);
+      sl.addEventListener('mouseenter', () => showSliderTooltip(true));
+      sl.addEventListener('mouseleave', () => showSliderTooltip(false));
+      sl.addEventListener('touchstart', () => showSliderTooltip(true));
+      sl.addEventListener('touchend', () => setTimeout(() => showSliderTooltip(false), 1200));
+    }
+  }, 100);
+  }
+
   // ===== PACKAGE =====
-  function selectPackage(pkg, el) {
-    state.package = pkg;
-    document.querySelectorAll('.pkg-card').forEach(c => c.classList.remove('selected'));
+  function selectPackage(pkg,el){
+    state.package=pkg;
+    document.querySelectorAll('.pkg-card').forEach(c=>c.classList.remove('selected'));
     el.classList.add('selected');
     updatePrice();
   }
 
   // ===== QTY =====
-  const qtyValues = [250,500,1000,2500,5000,10000];
-  function setQty(val) {
-    state.qty = val;
-    document.getElementById('qty-slider').value = val;
-    document.getElementById('qty-display').textContent = val.toLocaleString('pl-PL');
-    updatePills(val); updatePrice();
+  const qtyValues=[250,500,1000,2500,5000,10000];
+  function setQty(val){
+    state.qty=val;
+    document.getElementById('qty-slider').value=val;
+    document.getElementById('qty-display').textContent=val.toLocaleString('pl-PL');
+    updatePills(val);updatePrice();
   }
-  function onSlider(val) {
-    state.qty = parseInt(val);
-    document.getElementById('qty-display').textContent = parseInt(val).toLocaleString('pl-PL');
-    updatePills(parseInt(val)); updatePrice();
+  function onSlider(val){
+    state.qty=parseInt(val);
+    document.getElementById('qty-display').textContent=parseInt(val).toLocaleString('pl-PL');
+    updatePills(parseInt(val));updatePrice();
   }
-  function updatePills(val) {
-    document.querySelectorAll('.qty-pill').forEach((p,i) => p.classList.toggle('active', qtyValues[i]===val));
+  function updatePills(val){
+    document.querySelectorAll('.qty-pill').forEach((p,i)=>p.classList.toggle('active',qtyValues[i]===val));
   }
 
   // ===== METHOD =====
-  function selectMethod(method) {
-    state.method = method;
-    ['card','blik','p24'].forEach(m => {
-      const el = document.getElementById('method-'+m);
-      el.classList.toggle('selected-method', m===method);
-      el.querySelector('input').checked = (m===method);
+  function selectMethod(method){
+    state.method=method;
+    ['card','blik','p24'].forEach(m=>{
+      const el=document.getElementById('method-'+m);
+      el.classList.toggle('selected-method',m===method);
+      el.querySelector('input').checked=(m===method);
     });
   }
 
   // ===== PRICE =====
-  function updatePrice() {
-    const total = (prices[state.package] * state.qty) / 1000;
-    const formatted = total.toFixed(2).replace('.',',') + ' zł';
-    const priceEl = document.getElementById('price-display');
-    priceEl.textContent = formatted;
+  function updatePrice(){
+    updateRefillSection();
+    const base=(prices[state.package]*state.qty)/1000;
+    const refillCost=getRefillCost();
+    let total=base+refillCost;
+    const formatted=total.toFixed(2).replace('.',',')+' zł';
+    const priceEl=document.getElementById('price-display');
+    priceEl.textContent=formatted;
     priceEl.classList.remove('price-bounce');
     void priceEl.offsetWidth;
     priceEl.classList.add('price-bounce');
-    document.getElementById('summary-desc').textContent = `Pakiet ${packageNames[state.package]} · ${state.qty.toLocaleString('pl-PL')} szt.`;
+    let desc=`Pakiet ${packageNames[state.package]} · ${state.qty.toLocaleString('pl-PL')} szt.`;
+    if(refillCost>0) desc+=` + Refill ${selectedRefill}d`;
+    document.getElementById('summary-desc').textContent=desc;
   }
 
   // ===== ORDER =====
-  function handleOrder() {
-    const username = document.getElementById('username-input').value.trim();
-    if (!username) {
-      const input = document.getElementById('username-input');
-      input.style.boxShadow = '0 0 0 3px rgba(244,63,94,0.3)';
-      input.style.borderColor = '#f43f5e';
-      input.placeholder = 'Wpisz nazwę profilu, aby kontynuować!';
+  function handleOrder(){
+    const username=document.getElementById('username-input').value.trim();
+    if(!username){
+      const input=document.getElementById('username-input');
+      // Shake + glow effect on input
+      input.style.boxShadow='0 0 0 3px rgba(244,63,94,0.35)';
+      input.style.borderColor='#f43f5e';
+      input.style.animation='shakeInput .4s cubic-bezier(.36,.07,.19,.97)';
       input.focus();
-      setTimeout(() => { input.style.boxShadow=''; input.style.borderColor=''; input.placeholder='twoja_nazwa_profilu'; }, 2500);
+      setTimeout(()=>{
+        input.style.boxShadow='';input.style.borderColor='';input.style.animation='';
+        input.placeholder='twoja_nazwa_profilu';
+      },2800);
+      // Show beautiful toast
+      showToast('👤 Uzupełnij nazwę profilu!','Wpisz swój nick na Instagramie lub TikToku aby kontynuować.','error');
       return;
     }
-    const total = (prices[state.package] * state.qty) / 1000;
-    const formatted = total.toFixed(2).replace('.',',') + ' zł';
-    const platform = state.platform==='ig' ? 'Instagram' : 'TikTok';
-    document.getElementById('modal-details').innerHTML = `
+    const total=(prices[state.package]*state.qty)/1000;
+    const formatted=total.toFixed(2).replace('.',',')+' zł';
+    const platform=state.platform==='ig'?'Instagram':'TikTok';
+    document.getElementById('modal-details').innerHTML=`
       <div class="flex justify-between py-1" style="border-bottom:1px solid var(--card-border)"><span style="color:var(--text-muted)">Platforma</span><span style="font-weight:600;color:var(--text-primary)">${platform}</span></div>
       <div class="flex justify-between py-1" style="border-bottom:1px solid var(--card-border)"><span style="color:var(--text-muted)">Profil</span><span style="font-weight:600;color:var(--text-primary)">@${username.replace('@','')}</span></div>
       <div class="flex justify-between py-1" style="border-bottom:1px solid var(--card-border)"><span style="color:var(--text-muted)">Pakiet</span><span style="font-weight:600;color:var(--text-primary)">${packageNames[state.package]}</span></div>
       <div class="flex justify-between py-1" style="border-bottom:1px solid var(--card-border)"><span style="color:var(--text-muted)">Ilość</span><span style="font-weight:600;color:var(--text-primary)">${state.qty.toLocaleString('pl-PL')} obserwujących</span></div>
       <div class="flex justify-between py-1" style="border-bottom:1px solid var(--card-border)"><span style="color:var(--text-muted)">Metoda</span><span style="font-weight:600;color:var(--text-primary)">${methodLabels[state.method]}</span></div>
+      ${selectedRefill!=='none'?`<div class="flex justify-between py-1" style="border-bottom:1px solid var(--card-border)"><span style="color:var(--text-muted)">🛡️ Refill</span><span style="font-weight:600;color:#7c3aed">${selectedRefill} dni (+${getRefillCost().toFixed(2).replace('.',',')} zł)</span></div>`:''}
       <div class="flex justify-between py-1.5 mt-1"><span style="font-weight:700;color:var(--text-primary)">Razem</span><span style="font-weight:800;color:#7c3aed;font-size:1.1rem">${formatted}</span></div>
-      <div class="text-xs mt-1" style="color:var(--text-muted)">⏱ Realizacja do <strong style="color:var(--text-primary)">1 dnia roboczego</strong></div>
+      <div class="text-xs mt-1" style="color:var(--text-muted)">Realizacja do <strong style="color:var(--text-primary)">1 dnia roboczego</strong></div>
     `;
     document.getElementById('order-modal').classList.add('open');
   }
 
   // ===== STRIPE PAYMENT =====
-  async function initiateStripePayment() {
-    const payBtn = document.getElementById('pay-btn');
-    payBtn.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Inicjowanie...';
-    payBtn.disabled = true;
-    const username = document.getElementById('username-input').value.trim();
-    const totalGrosze = Math.round((prices[state.package] * state.qty / 1000) * 100);
-    try {
-      const res = await fetch('https://followflow-production.up.railway.app/create-checkout', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({ amount:totalGrosze, platform:state.platform, package:state.package, qty:state.qty, username:username.replace('@',''), method:state.method })
+  async function initiateStripePayment(){
+    const payBtn=document.getElementById('pay-btn');
+    payBtn.innerHTML='<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Inicjowanie...';
+    payBtn.disabled=true;
+    const username=document.getElementById('username-input').value.trim();
+    const totalGrosze=Math.round(((prices[state.package]*state.qty/1000)+getRefillCost())*100);
+    try{
+      const res=await fetch('https://followflow-production.up.railway.app/create-checkout',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({amount:totalGrosze,platform:state.platform,package:state.package,qty:state.qty,username:username.replace('@',''),method:state.method,refill:selectedRefill})
       });
-      const { url, error } = await res.json();
-      if (error) throw new Error(error);
-      window.location.href = url;
-    } catch(err) {
-      alert('Błąd połączenia z serwerem: ' + err.message);
-    }
-    payBtn.innerHTML = '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg> Zapłać teraz';
-    payBtn.disabled = false;
+      const{url,error}=await res.json();
+      if(error)throw new Error(error);
+      window.location.href=url;
+    }catch(err){alert('Błąd połączenia z serwerem: '+err.message);}
+    payBtn.innerHTML='<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg> Zapłać teraz';
+    payBtn.disabled=false;
   }
 
-  function closeModal(event, force) {
-    if (force || (event && event.target===document.getElementById('order-modal'))) {
+  function closeModal(event,force){
+    if(force||(event&&event.target===document.getElementById('order-modal'))){
       document.getElementById('order-modal').classList.remove('open');
-      setTimeout(() => {
-        document.getElementById('modal-icon').innerHTML = '💳';
-        document.getElementById('modal-title').textContent = 'Podsumowanie zamówienia';
-        document.getElementById('modal-text').textContent = 'Sprawdź szczegóły i przejdź do płatności Stripe';
-        document.getElementById('stripe-info').style.display = '';
-        document.getElementById('pay-btn').innerHTML = '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg> Zapłać teraz';
-        document.getElementById('pay-btn').onclick = initiateStripePayment;
-        document.getElementById('pay-btn').disabled = false;
-      }, 400);
+      setTimeout(()=>{
+        document.getElementById('modal-icon').innerHTML='💳';
+        document.getElementById('modal-title').textContent='Podsumowanie zamówienia';
+        document.getElementById('modal-text').textContent='Sprawdź szczegóły i przejdź do płatności Stripe';
+        document.getElementById('stripe-info').style.display='';
+        document.getElementById('pay-btn').innerHTML='<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg> Zapłać teraz';
+        document.getElementById('pay-btn').onclick=initiateStripePayment;
+        document.getElementById('pay-btn').disabled=false;
+      },400);
     }
   }
 
   updatePrice();
+
+  // ========================================================
+  // 🎨 VISUAL EXTRAS – tylko efekty wizualne, zero logiki
+  // ========================================================
+
+  // --- 1. SMOOTH CURSOR GLOW (already initialized above, keep) ---
+
+  // --- 2. TILT EFFECT on pkg cards ---
+  document.querySelectorAll('.pkg-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      const cx = r.width / 2;
+      const cy = r.height / 2;
+      const rotX = ((y - cy) / cy) * -12;
+      const rotY = ((x - cx) / cx) * 12;
+      card.style.transform = `perspective(600px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-4px) scale(1.02)`;
+      const glowX = (x / r.width) * 100;
+      const glowY = (y / r.height) * 100;
+      if(!card.classList.contains('selected')) card.style.background = `radial-gradient(circle at ${glowX}% ${glowY}%, rgba(124,58,237,0.08), var(--card-bg) 70%)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+      card.style.background = '';
+      card.style.transition = 'transform .4s ease, background .4s ease, box-shadow .4s ease, border-color .3s';
+    });
+  });
+
+  // --- 3. MAGNETIC BUTTON EFFECT on CTA ---
+  const ctaBtnEl = document.getElementById('cta-btn');
+  if (ctaBtnEl) {
+    ctaBtnEl.addEventListener('mousemove', e => {
+      const r = ctaBtnEl.getBoundingClientRect();
+      const x = e.clientX - r.left - r.width / 2;
+      const y = e.clientY - r.top - r.height / 2;
+      ctaBtnEl.style.transform = `translate(${Math.max(-8,Math.min(8,x * 0.15))}px, ${Math.max(-5,Math.min(5,y * 0.2))}px)`;
+    });
+    ctaBtnEl.addEventListener('mouseleave', () => {
+      ctaBtnEl.style.transform = '';
+      ctaBtnEl.style.transition = 'transform .5s cubic-bezier(.34,1.56,.64,1), box-shadow .25s';
+    });
+  }
+
+  // --- 4. RIPPLE on qty pills ---
+  document.querySelectorAll('.qty-pill').forEach(pill => {
+    pill.addEventListener('click', e => {
+      const r = pill.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.style.cssText = `position:absolute;border-radius:50%;background:rgba(124,58,237,0.35);
+        width:60px;height:60px;top:${e.clientY-r.top-30}px;left:${e.clientX-r.left-30}px;
+        transform:scale(0);animation:rippleAnim .5s ease-out forwards;pointer-events:none`;
+      pill.style.position = 'relative';
+      pill.style.overflow = 'hidden';
+      pill.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 500);
+    });
+  });
+
+  // --- 5. FLOATING EMOJI BURST on CTA click ---
+  const ctaEl = document.getElementById('cta-btn');
+  if (ctaEl) {
+    ctaEl.addEventListener('mousedown', () => {
+      const emojis = ['🚀','⭐','💜','✨','🔥','💫','🎯'];
+      for (let i = 0; i < 8; i++) {
+        const el = document.createElement('div');
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        const r = ctaEl.getBoundingClientRect();
+        const angle = (i / 8) * Math.PI * 2;
+        const dist = 60 + Math.random() * 40;
+        const tx = Math.cos(angle) * dist;
+        const ty = Math.sin(angle) * dist - 40;
+        el.style.cssText = `position:fixed;font-size:1.4rem;pointer-events:none;z-index:9999;
+          left:${r.left + r.width/2}px;top:${r.top + r.height/2}px;
+          transition:all .8s cubic-bezier(.25,.46,.45,.94);opacity:1;`;
+        document.body.appendChild(el);
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          el.style.transform = `translate(${tx}px, ${ty}px) scale(1.4) rotate(${Math.random()*60-30}deg)`;
+          el.style.opacity = '0';
+        }));
+        setTimeout(() => el.remove(), 900);
+      }
+    });
+  }
+
+  // --- 6. KONAMI CODE easter egg 🎮 ---
+  const konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  let konamiIdx = 0;
+  document.addEventListener('keydown', e => {
+    if (e.key === konamiCode[konamiIdx]) {
+      konamiIdx++;
+      if (konamiIdx === konamiCode.length) {
+        konamiIdx = 0;
+        launchKonami();
+      }
+    } else {
+      konamiIdx = 0;
+    }
+  });
+  function launchKonami() {
+    // Rainbow mode for 4 seconds
+    document.body.style.animation = 'rainbowBg 0.5s linear infinite';
+    const toast = document.createElement('div');
+    toast.innerHTML = '🎮 KONAMI CODE! Odkryłeś sekret FollowFlow! 🎉';
+    toast.style.cssText = `position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);
+      background:linear-gradient(135deg,#7c3aed,#f43f5e);color:white;
+      padding:14px 28px;border-radius:16px;font-weight:700;font-size:.95rem;
+      z-index:9999;box-shadow:0 16px 40px rgba(124,58,237,0.5);
+      transition:transform .5s cubic-bezier(.34,1.56,.64,1);white-space:nowrap`;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => requestAnimationFrame(() => { toast.style.transform = 'translateX(-50%) translateY(0)'; }));
+    // Rain emojis
+    const rainEmojis = ['🚀','⭐','💜','✨','🔥','💫','👑','💎','🎯','🌟'];
+    for (let i = 0; i < 40; i++) {
+      setTimeout(() => {
+        const e2 = document.createElement('div');
+        e2.textContent = rainEmojis[Math.floor(Math.random() * rainEmojis.length)];
+        e2.style.cssText = `position:fixed;font-size:${1.5 + Math.random()*1.5}rem;
+          left:${Math.random()*100}vw;top:-50px;z-index:9998;pointer-events:none;
+          animation:particleFloat ${3+Math.random()*2}s linear forwards`;
+        document.body.appendChild(e2);
+        setTimeout(() => e2.remove(), 5000);
+      }, i * 80);
+    }
+    setTimeout(() => {
+      toast.style.transform = 'translateX(-50%) translateY(100px)';
+      document.body.style.animation = '';
+      setTimeout(() => toast.remove(), 500);
+    }, 4000);
+  }
+
+  // --- 7. LOGO click counter easter egg ---
+  let logoClicks = 0;
+  const logoEl = document.querySelector('nav .w-8');
+  if (logoEl) {
+    logoEl.style.cursor = 'pointer';
+    logoEl.addEventListener('click', () => {
+      logoClicks++;
+      logoEl.style.transform = `rotate(${logoClicks * 72}deg) scale(1.2)`;
+      logoEl.style.transition = 'transform .4s cubic-bezier(.34,1.56,.64,1)';
+      setTimeout(() => { logoEl.style.transform = `rotate(${logoClicks * 72}deg)`; }, 400);
+      if (logoClicks === 5) {
+        const t = document.createElement('div');
+        t.innerHTML = '🎉 Znalazłeś sekret! Kliknij 5 razy logo!';
+        t.style.cssText = `position:fixed;top:80px;left:50%;transform:translateX(-50%);
+          background:linear-gradient(135deg,#f43f5e,#7c3aed);color:white;
+          padding:10px 24px;border-radius:12px;font-weight:700;font-size:.85rem;
+          z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.2);animation:fadeUp .4s forwards`;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+        logoClicks = 0;
+      }
+    });
+  }
+
+  // --- 8. MATRIX RAIN on FAQ section hover ---
+  const faqSection = document.querySelector('section:has(.faq-item)');
+  if (faqSection) {
+    let matrixCanvas = null;
+    faqSection.addEventListener('mouseenter', () => {
+      if (matrixCanvas) return;
+      matrixCanvas = document.createElement('canvas');
+      matrixCanvas.style.cssText = `position:absolute;inset:0;pointer-events:none;opacity:0.04;z-index:0;border-radius:inherit`;
+      faqSection.style.position = 'relative';
+      faqSection.appendChild(matrixCanvas);
+      const ctx = matrixCanvas.getContext('2d');
+      matrixCanvas.width = faqSection.offsetWidth;
+      matrixCanvas.height = faqSection.offsetHeight;
+      const cols = Math.floor(matrixCanvas.width / 16);
+      const drops = Array(cols).fill(0);
+      const chars = '01アイウエオカキクケコ∞ΩΔΨ';
+      let animId;
+      function drawMatrix() {
+        ctx.fillStyle = 'rgba(10,10,15,0.05)';
+        ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+        ctx.fillStyle = '#7c3aed';
+        ctx.font = '12px monospace';
+        drops.forEach((y, i) => {
+          ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * 16, y * 16);
+          if (y * 16 > matrixCanvas.height && Math.random() > 0.975) drops[i] = 0;
+          else drops[i]++;
+        });
+        animId = requestAnimationFrame(drawMatrix);
+      }
+      drawMatrix();
+      faqSection.addEventListener('mouseleave', () => {
+        cancelAnimationFrame(animId);
+        matrixCanvas.remove();
+        matrixCanvas = null;
+      }, { once: true });
+    });
+  }
+
+  // --- 9. STAR TRAIL on mouse move ---
+  let trailTimeout;
+  document.addEventListener('mousemove', e => {
+    clearTimeout(trailTimeout);
+    if (Math.random() > 0.65) {
+      const star = document.createElement('div');
+      star.textContent = ['✦','·','✧','⋆'][Math.floor(Math.random()*4)];
+      star.style.cssText = `position:fixed;left:${e.clientX}px;top:${e.clientY}px;
+        pointer-events:none;z-index:9998;font-size:${12+Math.random()*14}px;
+        color:rgba(124,58,237,${0.7+Math.random()*0.3});
+        transition:all .8s ease;transform:translate(-50%,-50%)`;
+      document.body.appendChild(star);
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        star.style.opacity = '0';
+        star.style.transform = `translate(${-50+Math.random()*40-20}%, ${-150}%) scale(0.3)`;
+      }));
+      setTimeout(() => star.remove(), 800);
+    }
+  });
+
+  // --- 11. PARALLAX on hero blobs ---
+  const blob1 = document.querySelector('.hero-blob-1');
+  const blob2 = document.querySelector('.hero-blob-2');
+  document.addEventListener('mousemove', e => {
+    if (!blob1 || !blob2) return;
+    const x = (e.clientX / window.innerWidth - 0.5) * 30;
+    const y = (e.clientY / window.innerHeight - 0.5) * 20;
+    blob1.style.transform = `translate(${x}px, ${y}px) scale(1)`;blob1.style.transition='transform .1s ease';
+    blob2.style.transform = `translate(${-x}px, ${-y}px) scale(1)`;blob2.style.transition='transform .1s ease';
+  });
+
+  // --- 12. TYPING EFFECT on hero subtitle ---
+  const heroP = document.querySelector('.hero-bg p.muted-text');
+  if (heroP) {
+    const originalText = heroP.textContent.trim();
+    heroP.textContent = '';
+    setTimeout(() => {
+      heroP.style.borderRight = '2px solid rgba(124,58,237,0.5)';
+      heroP.style.paddingRight = '2px';
+      let i = 0;
+      const typeTimer = setInterval(() => {
+        heroP.textContent = originalText.slice(0, i);
+        i++;
+        if (i > originalText.length) {
+          clearInterval(typeTimer);
+          setTimeout(() => { heroP.style.borderRight = 'none'; }, 800);
+        }
+      }, 22);
+    }, 600);
+  }
+
+  // --- 13. NEON GLOW pulse on active qty pill ---
+  setInterval(() => {
+    document.querySelectorAll('.qty-pill.active').forEach(p => {
+      p.animate([
+        { boxShadow: '0 4px 14px rgba(124,58,237,0.35)' },
+        { boxShadow: '0 4px 28px rgba(124,58,237,0.7)' },
+        { boxShadow: '0 4px 14px rgba(124,58,237,0.35)' }
+      ], { duration: 1800, iterations: 1 });
+    });
+  }, 2000);
+
+  // --- 14. CONFETTI BURST when package selected ---
+  document.querySelectorAll('.pkg-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const r = card.getBoundingClientRect();
+      const colors = ['#7c3aed','#f43f5e','#38bdf8','#a855f7','#f59e0b'];
+      for (let i = 0; i < 12; i++) {
+        const conf = document.createElement('div');
+        const angle = (i / 12) * Math.PI * 2;
+        const dist = 40 + Math.random() * 50;
+        conf.style.cssText = `position:fixed;width:6px;height:6px;border-radius:2px;
+          background:${colors[Math.floor(Math.random()*colors.length)]};
+          left:${r.left+r.width/2}px;top:${r.top+r.height/2}px;
+          pointer-events:none;z-index:9999;
+          transition:all .7s cubic-bezier(.25,.46,.45,.94);opacity:1`;
+        document.body.appendChild(conf);
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          conf.style.transform = `translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist-30}px) rotate(${Math.random()*360}deg)`;
+          conf.style.opacity = '0';
+        }));
+        setTimeout(() => conf.remove(), 750);
+      }
+    });
+  });
+
+  // ===== TOAST NOTIFICATION =====
+  function showToast(title, msg, type='success') {
+    const existing = document.getElementById('ff-toast');
+    if (existing) existing.remove();
+    const toast = document.createElement('div');
+    toast.id = 'ff-toast';
+    const isErr = type === 'error';
+    toast.innerHTML = `
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem;
+          background:${isErr ? 'linear-gradient(135deg,#f43f5e,#e11d48)' : 'linear-gradient(135deg,#7c3aed,#a855f7)'}">
+          ${isErr ? '👤' : '✅'}
+        </div>
+        <div>
+          <p style="font-family:Syne,sans-serif;font-weight:700;font-size:.95rem;color:#fff;margin-bottom:3px">${title}</p>
+          <p style="font-size:.8rem;color:rgba(255,255,255,0.8);line-height:1.4">${msg}</p>
+        </div>
+        <button onclick="this.closest('#ff-toast').remove()" style="background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:1.1rem;line-height:1;padding:0;margin-left:4px">✕</button>
+      </div>
+    `;
+    toast.style.cssText = `
+      position:fixed;bottom:28px;right:24px;
+      background:${isErr ? 'linear-gradient(135deg,rgba(244,63,94,0.95),rgba(124,58,237,0.95))' : 'linear-gradient(135deg,rgba(124,58,237,0.95),rgba(168,85,247,0.95))'};
+      backdrop-filter:blur(12px);
+      padding:16px 18px;border-radius:18px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.3),0 0 0 1px rgba(255,255,255,0.1);
+      z-index:99999;max-width:320px;width:calc(100vw - 48px);
+      transform:translateY(120px) scale(0.9);opacity:0;
+      transition:transform .45s cubic-bezier(.34,1.56,.64,1),opacity .35s ease;
+    `;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      toast.style.transform = 'translateY(0) scale(1)';
+      toast.style.opacity = '1';
+    }));
+    setTimeout(() => {
+      if (!toast.parentNode) return;
+      toast.style.transform = 'translateY(120px) scale(0.9)';
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 400);
+    }, 3500);
+  }
+
+
+  // ===== CONFETTI ON LEFT CLICK WITH SOUND =====
+  function playConfettiSound() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const tones = [523, 659, 784, 1047];
+      tones.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = freq;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0.04, ctx.currentTime + i * 0.07);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.07 + 0.25);
+        osc.start(ctx.currentTime + i * 0.07);
+        osc.stop(ctx.currentTime + i * 0.07 + 0.25);
+      });
+    } catch(e) {}
+  }
+
+  document.addEventListener('click', e => {
+    // Skip clicks on buttons/inputs/links to not interfere
+    if (e.target.closest('button,a,input,label,.stripe-method')) return;
+
+    playConfettiSound();
+
+    const colors = ['#7c3aed','#f43f5e','#38bdf8','#a855f7','#f59e0b','#10b981','#fff','#fbbf24'];
+    const shapes = ['circle','square','triangle'];
+
+    for (let i = 0; i < 28; i++) {
+      const conf = document.createElement('div');
+      const shape = shapes[Math.floor(Math.random() * shapes.length)];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const size = 6 + Math.random() * 8;
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 80 + Math.random() * 120;
+      const tx = Math.cos(angle) * dist;
+      const ty = Math.sin(angle) * dist - 60;
+      let borderRadius = '50%';
+      let borderStyle = '';
+      if (shape === 'square') borderRadius = '2px';
+      if (shape === 'triangle') {
+        borderStyle = `border-left:${size/2}px solid transparent;border-right:${size/2}px solid transparent;border-bottom:${size}px solid ${color};background:transparent;`;
+        conf.style.cssText = `position:fixed;width:0;height:0;${borderStyle}
+          left:${e.clientX}px;top:${e.clientY}px;pointer-events:none;z-index:99998;
+          transition:all ${0.6+Math.random()*0.5}s cubic-bezier(.25,.46,.45,.94);opacity:1`;
+      } else {
+        conf.style.cssText = `position:fixed;width:${size}px;height:${size}px;border-radius:${borderRadius};
+          background:${color};left:${e.clientX}px;top:${e.clientY}px;
+          pointer-events:none;z-index:99998;
+          transition:all ${0.6+Math.random()*0.5}s cubic-bezier(.25,.46,.45,.94);opacity:1`;
+      }
+      document.body.appendChild(conf);
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        conf.style.transform = `translate(${tx}px,${ty}px) rotate(${Math.random()*720}deg) scale(${0.1+Math.random()*0.5})`;
+        conf.style.opacity = '0';
+      }));
+      setTimeout(() => conf.remove(), 1200);
+    }
+  });
+
+  // Add needed CSS for effects
+  const extraStyle = document.createElement('style');
+  extraStyle.textContent = `
+    @keyframes rainbowBg {0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
+    @keyframes rippleAnim{to{transform:scale(4);opacity:0}}
+    @keyframes shakeInput {
+      0%,100%{transform:translateX(0)}
+      15%{transform:translateX(-8px)}
+      30%{transform:translateX(8px)}
+      45%{transform:translateX(-6px)}
+      60%{transform:translateX(6px)}
+      75%{transform:translateX(-4px)}
+      90%{transform:translateX(4px)}
+    }
+    .pkg-card{will-change:transform}
+    
+    .discount-input{
+      width:100%;padding:14px 50px 14px 16px;border-radius:14px;
+      border:2px solid var(--card-border);background:var(--input-bg);
+      color:var(--text-primary);font-size:1rem;font-weight:700;
+      text-align:center;letter-spacing:2px;text-transform:uppercase;
+      transition:all .2s;outline:none;
+    }
+    .discount-input:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,0.2)}
+    .discount-input.valid{border-color:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,0.2);background:rgba(16,185,129,0.05)}
+    .discount-input.invalid{border-color:#f43f5e;animation:shakeInput .4s ease;box-shadow:0 0 0 3px rgba(244,63,94,0.2)}
+
+    /* REFILL SECTION */
+    .refill-wrap{transition:all .4s cubic-bezier(.4,0,.2,1);overflow:hidden;max-height:0;opacity:0}
+    .refill-wrap.visible{max-height:600px;opacity:1}
+    .refill-option{
+      display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;
+      background:var(--stripe-row-bg);border:1.5px solid var(--stripe-row-border);
+      cursor:pointer;transition:all .2s;
+    }
+    .refill-option:hover{border-color:#a855f7;transform:translateX(3px)}
+    .refill-option.selected-refill{border-color:#7c3aed;background:var(--summary-bg);box-shadow:0 4px 16px rgba(124,58,237,0.15)}
+    .refill-option input[type=radio]{accent-color:#7c3aed}
+    .refill-badge{font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:9999px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff}
+
+    #ff-toast *{box-sizing:border-box}
+  `;
+  document.head.appendChild(extraStyle);
+
+
 </script>
 </body>
 </html>
