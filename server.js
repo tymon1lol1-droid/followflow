@@ -6,8 +6,7 @@ const cors = require('cors');
 const app = express();
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const OWNER_EMAIL = 'FollowFlowSupport@proton.me';
-const APP_URL = process.env.APP_URL || 'http://localhost:3000';
+const OWNER_EMAIL = 'followflowsupport@proton.me';
 
 app.use(cors());
 app.use(express.static(__dirname));
@@ -15,39 +14,18 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/followers-landing.html');
 });
 
-// Stripe wymaga raw body dla webhooków
 app.use('/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json());
 
 // =============================================
-// 1. Tworzenie płatności
-// =============================================
-app.post('/create-payment-intent', async (req, res) => {
-  try {
-    const { amount, platform, package: pkg, qty, username, method } = req.body;
-
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount, // w groszach
-      currency: 'pln',
-      payment_method_types: ['card', 'blik', 'p24'],
-      metadata: { platform, package: pkg, qty: String(qty), username, method }
-    });
-
-    res.json({ clientSecret: paymentIntent.client_secret });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// =============================================
-// 2. Stripe Checkout Session
+// 1. Stripe Checkout Session
 // =============================================
 app.post('/create-checkout', async (req, res) => {
   try {
-    const { amount, platform, package: pkg, qty, username, method } = req.body;
+    const { amount, platform, package: pkg, qty, username, method, refill } = req.body;
     const platformNames = { ig: 'Instagram', tt: 'TikTok' };
-    const packageNames = { basic: 'Basic', premium: 'Premium', real: 'Real' };
+    const packageNames  = { basic: 'Basic', premium: 'Premium', real: 'Real' };
+    const refillLabel   = refill && refill !== 'none' ? ` + Refill ${refill}d` : '';
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card', 'blik', 'p24'],
@@ -55,17 +33,24 @@ app.post('/create-checkout', async (req, res) => {
         price_data: {
           currency: 'pln',
           product_data: {
-            name: 'FollowFlow – ' + (platformNames[platform] || platform) + ' ' + (packageNames[pkg] || pkg),
-            description: parseInt(qty).toLocaleString('pl-PL') + ' obserwujących dla @' + username,
+            name: `FollowFlow – ${platformNames[platform] || platform} ${packageNames[pkg] || pkg}${refillLabel}`,
+            description: `${parseInt(qty).toLocaleString('pl-PL')} obserwujących dla @${username}`,
           },
           unit_amount: amount,
         },
         quantity: 1,
       }],
       mode: 'payment',
-      success_url: `${APP_URL}/sukces?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${APP_URL}/`,
-      metadata: { platform, package: pkg, qty: String(qty), username, method }
+      success_url: 'https://followflow-production.up.railway.app/sukces?session_id={CHECKOUT_SESSION_ID}',
+      cancel_url:  'https://followflow-production.up.railway.app/',
+      metadata: {
+        platform,
+        package:  pkg,
+        qty:      String(qty),
+        username,
+        method,
+        refill:   refill || 'none',
+      }
     });
 
     res.json({ url: session.url });
@@ -76,29 +61,41 @@ app.post('/create-checkout', async (req, res) => {
 });
 
 // =============================================
-// 3. Strona sukcesu
+// 2. Strona sukcesu
 // =============================================
 app.get('/sukces', (req, res) => {
   res.send(`<!DOCTYPE html>
 <html lang="pl">
-<head><meta charset="UTF-8"><title>Dziękujemy!</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<style>body{font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:linear-gradient(135deg,#fdf2f8,#ede9fe);}
-.box{text-align:center;background:#fff;padding:48px 40px;border-radius:24px;box-shadow:0 20px 60px rgba(124,58,237,0.15);max-width:420px;}
-h1{color:#7c3aed;font-size:2rem;margin-bottom:8px;}
-p{color:#6b7280;margin-bottom:24px;}
-a{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;padding:12px 28px;border-radius:12px;text-decoration:none;font-weight:bold;}
-</style></head>
-<body><div class="box">
-<div style="font-size:4rem;margin-bottom:16px">🎉</div>
-<h1>Dziękujemy!</h1>
-<p>Twoja płatność została przyjęta.<br>Obserwujący dotrą do <strong>1 dnia roboczego</strong>.</p>
-<a href="/">Wróć do strony</a>
-</div></body></html>`);
+<head>
+  <meta charset="UTF-8">
+  <title>Dziękujemy! – FollowFlow</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    body{font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center;
+      min-height:100vh;margin:0;background:linear-gradient(135deg,#fdf2f8,#ede9fe);}
+    .box{text-align:center;background:#fff;padding:48px 40px;border-radius:24px;
+      box-shadow:0 20px 60px rgba(124,58,237,0.15);max-width:420px;width:calc(100vw - 48px);}
+    h1{color:#7c3aed;font-size:2rem;margin-bottom:8px;}
+    p{color:#6b7280;margin-bottom:24px;line-height:1.6;}
+    a{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;
+      padding:12px 28px;border-radius:12px;text-decoration:none;font-weight:bold;}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div style="font-size:4rem;margin-bottom:16px">🎉</div>
+    <h1>Dziękujemy!</h1>
+    <p>Twoja płatność została przyjęta.<br>
+       Obserwujący dotrą do <strong>1 dnia roboczego</strong>.<br>
+       Potwierdzenie znajdziesz w historii płatności Stripe.</p>
+    <a href="/">Wróć do strony</a>
+  </div>
+</body>
+</html>`);
 });
 
 // =============================================
-// 4. Webhook – po udanej płatności wysyła maila
+// 3. Webhook – wysyła maila po zakupie
 // =============================================
 app.post('/webhook', async (req, res) => {
   const sig = req.headers['stripe-signature'];
@@ -113,57 +110,68 @@ app.post('/webhook', async (req, res) => {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    const { platform, package: pkg, qty, username, method } = session.metadata;
+    const { platform, package: pkg, qty, username, method, refill } = session.metadata;
     const kwota = (session.amount_total / 100).toFixed(2).replace('.', ',') + ' zł';
 
-    const packageNames = { basic: 'Basic', premium: 'Premium', real: 'Real' };
+    const packageNames  = { basic: 'Basic', premium: 'Premium', real: 'Real' };
     const platformNames = { ig: 'Instagram', tt: 'TikTok' };
+    const refillLabel   = refill && refill !== 'none' ? `${refill} dni` : 'Brak';
+    const refillColor   = refill && refill !== 'none' ? '#7c3aed' : '#999';
 
-    const emailResult = await resend.emails.send({
-      from: process.env.RESEND_FROM || 'onboarding@resend.dev',
-      to: process.env.OWNER_EMAIL || OWNER_EMAIL,
-      subject: `Nowe zamowienie FollowFlow - ${kwota}`,
-      html: `
-        <div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;background:#f9f9f9;padding:32px;border-radius:16px">
-          <h2 style="color:#7c3aed;margin-bottom:24px">🚀 Nowe zamówienie FollowFlow</h2>
-          <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden">
-            <tr style="background:#f3f0ff">
-              <td style="padding:12px 16px;font-weight:bold;color:#555;width:40%">Platforma</td>
-              <td style="padding:12px 16px;font-weight:bold;color:#111">${platformNames[platform] || platform}</td>
-            </tr>
-            <tr>
-              <td style="padding:12px 16px;color:#555;border-top:1px solid #f0f0f0">Nick / Profil</td>
-              <td style="padding:12px 16px;font-weight:bold;color:#111;border-top:1px solid #f0f0f0">@${username}</td>
-            </tr>
-            <tr style="background:#fafafa">
-              <td style="padding:12px 16px;color:#555;border-top:1px solid #f0f0f0">Pakiet</td>
-              <td style="padding:12px 16px;border-top:1px solid #f0f0f0">${packageNames[pkg] || pkg}</td>
-            </tr>
-            <tr>
-              <td style="padding:12px 16px;color:#555;border-top:1px solid #f0f0f0">Ilość</td>
-              <td style="padding:12px 16px;font-weight:bold;color:#111;border-top:1px solid #f0f0f0">${parseInt(qty).toLocaleString('pl-PL')} obserwujących</td>
-            </tr>
-            <tr style="background:#fafafa">
-              <td style="padding:12px 16px;color:#555;border-top:1px solid #f0f0f0">Metoda płatności</td>
-              <td style="padding:12px 16px;border-top:1px solid #f0f0f0">${method}</td>
-            </tr>
-            <tr style="background:#f3f0ff">
-              <td style="padding:14px 16px;font-weight:bold;color:#7c3aed;border-top:2px solid #ddd6fe;font-size:1.1em">💰 Kwota</td>
-              <td style="padding:14px 16px;font-weight:bold;color:#7c3aed;border-top:2px solid #ddd6fe;font-size:1.1em">${kwota}</td>
-            </tr>
-          </table>
-          <p style="color:#888;font-size:12px;margin-top:20px;text-align:center">
-            FollowFlow · Realizacja do 1 dnia roboczego · Payment ID: ${session.id}
-          </p>
-        </div>
-      `
-    });
+    try {
+      const emailResult = await resend.emails.send({
+        from: 'onboarding@resend.dev',
+        to:   OWNER_EMAIL,
+        subject: `Nowe zamowienie FollowFlow - ${kwota}`,
+        html: `
+          <div style="font-family:Arial,sans-serif;max-width:540px;margin:0 auto;background:#f9f9f9;padding:32px;border-radius:16px">
+            <h2 style="color:#7c3aed;margin-bottom:6px">Nowe zamowienie FollowFlow</h2>
+            <p style="color:#888;font-size:13px;margin-bottom:24px">Zrealizuj do 1 dnia roboczego</p>
+            <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+              <tr style="background:#f3f0ff">
+                <td style="padding:12px 16px;font-weight:bold;color:#555;width:42%">Platforma</td>
+                <td style="padding:12px 16px;font-weight:bold;color:#111">${platformNames[platform] || platform}</td>
+              </tr>
+              <tr>
+                <td style="padding:12px 16px;color:#555;border-top:1px solid #f0f0f0">Nick / Profil</td>
+                <td style="padding:12px 16px;font-weight:bold;color:#111;border-top:1px solid #f0f0f0">@${username}</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:12px 16px;color:#555;border-top:1px solid #f0f0f0">Pakiet</td>
+                <td style="padding:12px 16px;font-weight:bold;border-top:1px solid #f0f0f0">${packageNames[pkg] || pkg}</td>
+              </tr>
+              <tr>
+                <td style="padding:12px 16px;color:#555;border-top:1px solid #f0f0f0">Ilosc</td>
+                <td style="padding:12px 16px;font-weight:bold;color:#111;border-top:1px solid #f0f0f0">${parseInt(qty).toLocaleString('pl-PL')} obserwujacych</td>
+              </tr>
+              <tr style="background:#fafafa">
+                <td style="padding:12px 16px;color:#555;border-top:1px solid #f0f0f0">Ubezpieczenie Refill</td>
+                <td style="padding:12px 16px;font-weight:bold;color:${refillColor};border-top:1px solid #f0f0f0">${refillLabel}</td>
+              </tr>
+              <tr>
+                <td style="padding:12px 16px;color:#555;border-top:1px solid #f0f0f0">Metoda platnosci</td>
+                <td style="padding:12px 16px;border-top:1px solid #f0f0f0">${method}</td>
+              </tr>
+              <tr style="background:#f3f0ff">
+                <td style="padding:14px 16px;font-weight:bold;color:#7c3aed;border-top:2px solid #ddd6fe;font-size:1.1em">Kwota</td>
+                <td style="padding:14px 16px;font-weight:bold;color:#7c3aed;border-top:2px solid #ddd6fe;font-size:1.1em">${kwota}</td>
+              </tr>
+            </table>
+            <p style="color:#888;font-size:11px;margin-top:20px;text-align:center">
+              FollowFlow · ID platnosci: ${session.id}
+            </p>
+          </div>
+        `
+      });
 
-    console.log('Email result:', JSON.stringify(emailResult));
-    if (emailResult.error) {
-      console.error('Resend error:', JSON.stringify(emailResult.error));
-    } else {
-      console.log('Email sent OK, id:', emailResult.data && emailResult.data.id);
+      console.log('Email result:', JSON.stringify(emailResult));
+      if (emailResult.error) {
+        console.error('Resend error:', JSON.stringify(emailResult.error));
+      } else {
+        console.log('Email sent OK, id:', emailResult.data && emailResult.data.id);
+      }
+    } catch (emailErr) {
+      console.error('Email sending failed:', emailErr.message);
     }
   }
 
